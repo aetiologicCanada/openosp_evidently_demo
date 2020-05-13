@@ -1,0 +1,19 @@
+---
+# File pattern to watch for changes.
+# `/data` is the hardcoded mount point where the container watches for inotify events.
+trigger_file_glob: "/data/teleplanremit*"
+
+# A list of all AWK scripts to run. If a file matches the given glob pattern then the given script is executed on it
+# and it is copied into the output. Add as many awk scripts as you like and make sure they are mounted in the location
+# referenced in the `script` key
+awk_scripts:
+  - script: /scripts/remittance.awk
+    target_file_glob: "teleplanremit*"
+  - script: /scripts/claim.awk
+    target_file_glob: "folder1/folder2/H*"
+
+# SFTP connection details. Have assumed port 22. It will cd into `remote_dir` before copying files.
+sftp:
+  host: pickup.evidently.ca
+  user: testUser01
+  remote_dir: /writable

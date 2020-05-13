@@ -1,7 +1,11 @@
-See `test/docker-compose.yml` for an example of how to run this docker container.
+Modify docker-compose.tml so that /data on the host points to the appropriate folder
 
-See `test/config.yml` for an example of a config file.
+Modify config.yml target so that the glob for laim.awk points to the proper folder: currently it assumes /data/folder1/folder2/H*
 
-To run tests you need to `cd test` and `pip install -r requirements.txt`. 
-Then you can run `python test.py` (only tested with python 3.7.
-Only works on Linux, and requires access to Docker.
+cd ../live
+docker-compose build
+docker-compose up & 
+then in data/ copy the extant teleplan file to a new file with prefix teleplanremit
+
+monitor docker-compose logs -f to see files send to evidently.
+

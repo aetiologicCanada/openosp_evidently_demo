@@ -1,7 +1,25 @@
-See `test/docker-compose.yml` for an example of how to run this docker container.
+For demonstration purposes
 
-See `test/config.yml` for an example of a config file.
+cd ../live
+docker-compose build
+docker-compose up & 
 
-To run tests you need to `cd test` and `pip install -r requirements.txt`. 
-Then you can run `python test.py` (only tested with python 3.7.
-Only works on Linux, and requires access to Docker.
+then from shell
+
+Copy the extant teleplan file to a new file in the same folder, ensure new file has prefix teleplanremit,
+eg. sudo cp teleplanremit1234567.txt teleplanremit_junk01
+
+then:
+
+monitor docker-compose logs -f to see files send to evidently.
+
+
+Once this is working, we can:
+
+modify live/docker-compose.yml so that /data on the host points to the appropriate OSCARDOCUMENTS folder on a real OSCAR instance
+
+Modify live/config.yml target so that the glob for claim.awk points to the proper folder: currently it assumes
+OSCARDOCUMENTS maps to /data and that claims are in OSCARDOCUMENTS//folder1/folder2/H* 
+
+If the claims are not below OSCARDOCUMENTS I will  have to make some adjustments
+

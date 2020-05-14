@@ -3,6 +3,7 @@ import os
 import shutil
 import subprocess
 import time
+import shutil
 from fnmatch import fnmatch
 from glob import glob
 
@@ -15,7 +16,7 @@ with open('config.yml') as f:
 
 SOURCE_DIR = '/data'
 TARGET_DIR = '/output'
-TARGET_DATA_DIR = os.path.join(TARGET_DIR, '/tmp/data/intermediate')
+TARGET_DATA_DIR = os.path.join(TARGET_DIR, '/tmp/evidently_data')
 ENCRYPT_KEY = '/app/encrypt.pub.pem'
 SFTP_KEY = '/app/sftp.pk'
 ENCRYPT_KEY_PKCS8 = ENCRYPT_KEY + '.pem'
@@ -23,6 +24,8 @@ TIME_STAMP = time.strftime("%Y%m%d-%H%M%S")
 logging.info(TIME_STAMP)
 SYMMETRIC_KEY = '/output/key.bin'
 SYMMETRIC_KEY_ENC = '/output/evidently_{}_key.bin.enc'.format(TIME_STAMP)
+
+shutil.rmtree(TARGET_DATA_DIR, ignore_errors=True, onerror=None)
 
 os.makedirs(TARGET_DATA_DIR, exist_ok=True)
 os.makedirs(TARGET_DIR,      exist_ok=True)

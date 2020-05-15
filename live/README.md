@@ -15,6 +15,12 @@ docker-compose up -d # daemon mode
 docker-compose logs -f # tail the logs
 ```
 
+Note: we can force a rebuild with `up` like this:
+
+```
+docker-compose up --force-recreate --build -d
+```
+
 In another bash terminal, trigger the watcher. The watcher will send the file to
 then public.evidently.ca server. The local log output will be visible in the
 previous terminal window that we recently started.

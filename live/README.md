@@ -17,7 +17,7 @@ docker-compose logs -f # tail the logs
 
 Note: we can force a rebuild with `up` like this:
 
-```
+```bash
 docker-compose up --force-recreate --build -d
 ```
 

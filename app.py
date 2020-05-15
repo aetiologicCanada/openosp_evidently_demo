@@ -106,7 +106,7 @@ def push_to_sftp(file_path):
 
 
 def cleanup():
-    shutil.rmtree(TARGET_DIR)
+    shutil.rmtree(TARGET_DIR, TARGET_DATA_DIR)
     os.makedirs(TARGET_DATA_DIR, exist_ok=True)
 
 

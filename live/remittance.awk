@@ -41,7 +41,7 @@ else if(rec_code =="S04")
 else  next
 }
 
-outputfile = "./data/intermediate/"data_centre"_"basename(FILENAME){}
+outputfile = "./data/"data_centre"_"basename(FILENAME){}
 {print record > outputfile}
 
 

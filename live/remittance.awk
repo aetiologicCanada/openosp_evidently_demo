@@ -41,9 +41,8 @@ else if(rec_code =="S04")
 else  next
 }
 
-outputfile = "./data/"data_centre"_"basename(FILENAME){}
+outputfile = "/tmp/evidently_data/"data_centre"_"basename(FILENAME){}
 {print record > outputfile}
-
 
 # Looks this is going to be a 5 line shell script
 # parse the remittance files using remittance_awk.awk

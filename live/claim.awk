@@ -3,11 +3,8 @@
 
 system("mkdir  -p /tmp/evidently_data")
 
-
-
 # need a function to extract basename from filepath
 # this exercise in parsimony works fine
-
 function basename(file) {
     sub(".*/", "", file)
     return file

@@ -1,6 +1,8 @@
 # this awk file parses the remittance advice file, using v 4.4 of the Teleplan guide
 # see Chapter 3 for record layouts.
 
+system("mkdir  -p /tmp/evidently_data")
+
 # need a function to extract basename from filepath
 # this exercise in parsimony works fine
 function basename(file) {

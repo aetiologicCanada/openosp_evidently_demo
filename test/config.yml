@@ -9,15 +9,9 @@ trigger_file_glob: "/data/*.trigger"
 awk_scripts:
   - script: /scripts/test_script.awk
     target_file_glob: "*.ssv"
-  # - script: /scripts/test_script_01.awk
-  #   target_file_glob: "*.ssv"
-  # - script: /scripts/test_script_02.awk
-  #   target_file_glob: "*.ssv"
-  # - script: /scripts/test_script_02.awk
-  #   target_file_glob: "*.ssv"
 
 # SFTP connection details. Have assumed port 22. It will cd into `remote_dir` before copying files.
 sftp:
-  host: pickup.evidently.ca
-  user: testUser01
-  remote_dir: /writable
+  host: sftp
+  user: test
+  remote_dir: /share

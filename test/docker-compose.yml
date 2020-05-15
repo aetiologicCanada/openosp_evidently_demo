@@ -1,0 +1,23 @@
+---
+version: "3"
+
+services:
+  evidently:
+    build: ../.
+    volumes:
+      - ./data:/data
+      - ./config.yml:/app/config.yml
+      - ./test_script.awk:/scripts/test_script.awk
+      - ./encrypt_rsa.pub:/app/encrypt.pub
+      - ./sftp_rsa:/app/sftp.pk
+
+  sftp:
+    image: atmoz/sftp:alpine-3.7
+    user: ${UID}
+    expose:
+      - 22
+    volumes:
+      - ./sftp_rsa.pub:/home/test/.ssh/keys/id_rsa.pub:ro
+      - ./share:/home/test/share
+      - ./sftp_init.sh:/etc/sftp.d/init.sh
+    command: test::${UID}

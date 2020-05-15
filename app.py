@@ -3,7 +3,6 @@ import os
 import shutil
 import subprocess
 import time
-import shutil
 from fnmatch import fnmatch
 from glob import glob
 
@@ -16,19 +15,13 @@ with open('config.yml') as f:
 
 SOURCE_DIR = '/data'
 TARGET_DIR = '/output'
-TARGET_DATA_DIR = os.path.join(TARGET_DIR, '/tmp/evidently_data')
-ENCRYPT_KEY = '/app/encrypt.pub.pem'
+TARGET_DATA_DIR = os.path.join(TARGET_DIR, 'data')
+ENCRYPT_KEY = '/app/encrypt.pub'
 SFTP_KEY = '/app/sftp.pk'
 ENCRYPT_KEY_PKCS8 = ENCRYPT_KEY + '.pem'
-TIME_STAMP = time.strftime("%Y%m%d-%H%M%S")
-logging.info(TIME_STAMP)
-SYMMETRIC_KEY = '/output/key.bin'
-SYMMETRIC_KEY_ENC = '/output/evidently_{}_key.bin.enc'.format(TIME_STAMP)
-
-shutil.rmtree(TARGET_DATA_DIR, ignore_errors=True, onerror=None)
 
 os.makedirs(TARGET_DATA_DIR, exist_ok=True)
-os.makedirs(TARGET_DIR,      exist_ok=True)
+
 
 def is_trigger_file(file_path):
     return fnmatch(file_path, config['trigger_file_glob'])
@@ -46,67 +39,36 @@ def run_awk_scripts():
 
 
 def tar_output_files():
-    result_file = os.path.join(TARGET_DIR, 'evidently_{}.tar.gz'.format(TIME_STAMP))
+    result_file = os.path.join(TARGET_DIR, 'evidently-{}.tar.gz'.format(time.strftime("%Y%m%d-%H%M%S")))
     logging.info('Gzipping {} into {}'.format(TARGET_DATA_DIR, result_file))
     subprocess.check_call(['tar', 'czf', result_file, TARGET_DATA_DIR])
-    logging.info('Gzip completed')
-    file_stats = os.stat(result_file)
     return result_file
 
 
-def encrypt_setup():
-# follows: https://www.czeskis.com/random/openssl-encrypt-file.html
-  
-# generate a symmetric key
-
-    logging.info('Generating symmetric key')
-
-    
-    subprocess.check_call(
-        'openssl rand -base64 32 > {}'.format(SYMMETRIC_KEY), 
-        shell=True)
-    logging.info("bin created")
-   
-
-# encrypt the symmetric key using the asymmetric keys
-    
-    subprocess.check_call(
-        'openssl rsautl -encrypt -inkey {} -pubin -in {} -out {}'.format(ENCRYPT_KEY, SYMMETRIC_KEY, SYMMETRIC_KEY_ENC),
-         shell=True)
-    return(SYMMETRIC_KEY)
-
-   
-def encrypt_tar_ball(in_path):
+def encrypt_file(in_path):
     out_path = '{}.enc'.format(in_path)
-    
-# encrypt the tar ball
+    logging.info('Encrypting {} to {}'.format(in_path, out_path))
+    # openssl rsautl expects a public key in PKCS8 format, so we convert it first
     subprocess.check_call(
-        'openssl enc  -pbkdf2 -salt -in {} -out {} -pass file:{}'.format(in_path, out_path, ENCRYPT_KEY),
+        'ssh-keygen -f {} -e -m pkcs8 > {}'.format(ENCRYPT_KEY, ENCRYPT_KEY_PKCS8),
         shell=True)
-
-    #file_stats = os.stat(out_path)
-    #logging.info(out_path)
-    #logging.info(file_stats)
-
+    subprocess.check_call(
+        'openssl rsautl -encrypt -inkey {} -pubin -in {} -out {}'.format(ENCRYPT_KEY_PKCS8, in_path, out_path),
+        shell=True)
     return out_path
 
-def push_to_sftp(file_path):
 
+def push_to_sftp(file_path):
     sftp_uri = '{}@{}'.format(config['sftp']['user'], config['sftp']['host'])
     target_dir = config['sftp']['remote_dir']
-
-    logging.info("SFTP put {} to {} {}".format(file_path, sftp_uri, target_dir))
-    
+    logging.info("SFTP put {} to {}".format(file_path, sftp_uri))
     subprocess.check_call(["sftp -oIdentityFile={} -oStrictHostKeyChecking=accept-new {} <<< $'cd {}\nput {}'"
                           .format(SFTP_KEY, sftp_uri, target_dir, file_path)],
                           shell=True, executable='/bin/bash')
 
-   
-    logging.info("SFTP completed")
-
 
 def cleanup():
-    shutil.rmtree(TARGET_DIR, TARGET_DATA_DIR)
+    shutil.rmtree(TARGET_DIR)
     os.makedirs(TARGET_DATA_DIR, exist_ok=True)
 
 
@@ -115,11 +77,9 @@ def run_file_trigger(file_event):
     if is_trigger_file(file_event.src_path):
         try:
             logging.info("Workflow triggered")
-            enc_key = encrypt_setup()
             run_awk_scripts()
             tarball = tar_output_files()
-            encrypted_file = encrypt_tar_ball(tarball)
-            push_to_sftp(SYMMETRIC_KEY_ENC)
+            encrypted_file = encrypt_file(tarball)
             push_to_sftp(encrypted_file)
         except Exception as ex:
             logging.error(ex)

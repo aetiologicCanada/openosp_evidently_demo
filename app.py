@@ -3,11 +3,11 @@ import os
 import shutil
 import subprocess
 import time
-import shutil
 from fnmatch import fnmatch
 from glob import glob
 
 import yaml
+
 from watchdog.events import FileSystemEventHandler
 from watchdog.observers import Observer
 
@@ -30,6 +30,7 @@ shutil.rmtree(TARGET_DATA_DIR, ignore_errors=True, onerror=None)
 os.makedirs(TARGET_DATA_DIR, exist_ok=True)
 os.makedirs(TARGET_DIR,      exist_ok=True)
 
+
 def is_trigger_file(file_path):
     return fnmatch(file_path, config['trigger_file_glob'])
 
@@ -37,16 +38,20 @@ def is_trigger_file(file_path):
 def run_awk_scripts():
     for script in config['awk_scripts']:
         script_path = script['script']
-        assert os.path.exists(script_path), 'Missing file {}'.format(script_path)
+        assert os.path.exists(
+            script_path), 'Missing file {}'.format(script_path)
         for source_file in glob(os.path.join(SOURCE_DIR, script['target_file_glob'])):
-            target_file = os.path.join(TARGET_DATA_DIR, os.path.basename(source_file))
-            cmd = 'awk -f {} {} > {}'.format(script_path, source_file, target_file)
+            target_file = os.path.join(
+                TARGET_DATA_DIR, os.path.basename(source_file))
+            cmd = 'awk -f {} {} > {}'.format(script_path,
+                                             source_file, target_file)
             logging.info(cmd)
             subprocess.check_call(cmd, shell=True)
 
 
 def tar_output_files():
-    result_file = os.path.join(TARGET_DIR, 'evidently_{}.tar.gz'.format(TIME_STAMP))
+    result_file = os.path.join(
+        TARGET_DIR, 'evidently_{}.tar.gz'.format(TIME_STAMP))
     logging.info('Gzipping {} into {}'.format(TARGET_DATA_DIR, result_file))
     subprocess.check_call(['tar', 'czf', result_file, TARGET_DATA_DIR])
     logging.info('Gzip completed')
@@ -55,53 +60,55 @@ def tar_output_files():
 
 
 def encrypt_setup():
-# follows: https://www.czeskis.com/random/openssl-encrypt-file.html
-  
-# generate a symmetric key
+    # follows: https://www.czeskis.com/random/openssl-encrypt-file.html
+
+    # generate a symmetric key
 
     logging.info('Generating symmetric key')
 
-    
     subprocess.check_call(
-        'openssl rand -base64 32 > {}'.format(SYMMETRIC_KEY), 
+        'openssl rand -base64 32 > {}'.format(SYMMETRIC_KEY),
         shell=True)
     logging.info("bin created")
-   
+
 
 # encrypt the symmetric key using the asymmetric keys
-    
+
     subprocess.check_call(
-        'openssl rsautl -encrypt -inkey {} -pubin -in {} -out {}'.format(ENCRYPT_KEY, SYMMETRIC_KEY, SYMMETRIC_KEY_ENC),
-         shell=True)
+        'openssl rsautl -encrypt -inkey {} -pubin -in {} -out {}'.format(
+            ENCRYPT_KEY, SYMMETRIC_KEY, SYMMETRIC_KEY_ENC),
+        shell=True)
     return(SYMMETRIC_KEY)
 
-   
+
 def encrypt_tar_ball(in_path):
     out_path = '{}.enc'.format(in_path)
-    
+
 # encrypt the tar ball
     subprocess.check_call(
-        'openssl enc  -pbkdf2 -salt -in {} -out {} -pass file:{}'.format(in_path, out_path, ENCRYPT_KEY),
+        'openssl enc  -pbkdf2 -salt -in {} -out {} -pass file:{}'.format(
+            in_path, out_path, ENCRYPT_KEY),
         shell=True)
 
     #file_stats = os.stat(out_path)
-    #logging.info(out_path)
-    #logging.info(file_stats)
+    # logging.info(out_path)
+    # logging.info(file_stats)
 
     return out_path
+
 
 def push_to_sftp(file_path):
 
     sftp_uri = '{}@{}'.format(config['sftp']['user'], config['sftp']['host'])
     target_dir = config['sftp']['remote_dir']
 
-    logging.info("SFTP put {} to {} {}".format(file_path, sftp_uri, target_dir))
-    
+    logging.info("SFTP put {} to {} {}".format(
+        file_path, sftp_uri, target_dir))
+
     subprocess.check_call(["sftp -oIdentityFile={} -oStrictHostKeyChecking=accept-new {} <<< $'cd {}\nput {}'"
-                          .format(SFTP_KEY, sftp_uri, target_dir, file_path)],
+                           .format(SFTP_KEY, sftp_uri, target_dir, file_path)],
                           shell=True, executable='/bin/bash')
 
-   
     logging.info("SFTP completed")
 
 
@@ -119,6 +126,20 @@ def run_file_trigger(file_event):
             run_awk_scripts()
             tarball = tar_output_files()
             encrypted_file = encrypt_tar_ball(tarball)
+
+            '''
+            TODO [shaun] Make a new directory for both files.
+            TODO [shaun] Put both files into that directory.
+            TODO [shaun] SFTP that single directory with one call to `push_to_sftp`.
+
+            Here is the target directory and naming structure.
+            ```
+            evidently_date_time_message/
+                evidently_date_time_key.bin.enc
+                evidently_date_time_payload.tar.gz.enc
+            ```
+            '''
+
             push_to_sftp(SYMMETRIC_KEY_ENC)
             push_to_sftp(encrypted_file)
         except Exception as ex:
@@ -130,6 +151,7 @@ def run_file_trigger(file_event):
 class Handler(FileSystemEventHandler):
     def on_created(self, event):
         run_file_trigger(event)
+
 
 if __name__ == '__main__':
     logging.basicConfig(level=logging.INFO,

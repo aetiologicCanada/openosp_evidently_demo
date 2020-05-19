@@ -1,6 +1,7 @@
 For demonstration purposes
 
 cd ../live
+
 docker-compose build
 docker-compose up & 
 
@@ -11,7 +12,9 @@ eg. sudo cp data/teleplanremit1234567.txt data/teleplanremit_junk01
 
 then:
 
-monitor docker-compose logs -f to see files send to evidently.
+monitor with:
+
+docker-compose logs -f to see files send to evidently.
 
 
 Once this is working, we can:

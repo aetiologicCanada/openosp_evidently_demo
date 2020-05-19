@@ -7,7 +7,7 @@ docker-compose up &
 then from shell
 
 Copy the extant teleplan file to a new file in the same folder, ensure new file has prefix teleplanremit,
-eg. sudo cp teleplanremit1234567.txt teleplanremit_junk01
+eg. sudo cp data/teleplanremit1234567.txt data/teleplanremit_junk01
 
 then:
 

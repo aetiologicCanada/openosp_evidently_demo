@@ -1,6 +1,6 @@
 For demonstration purposes
 
-cd ../live
+cd ./live
 
 docker-compose build
 docker-compose up & 

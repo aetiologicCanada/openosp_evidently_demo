@@ -3,6 +3,7 @@ For demonstration purposes
 cd ./live
 
 docker-compose build
+
 docker-compose up & 
 
 then from shell

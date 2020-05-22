@@ -1,11 +1,11 @@
 To install
 
-Obtain a shell on an open-osp isntance
+Obtain a shell on an open-osp instance
      
      git clone https://github.com/aetiologicCanada/openosp_evidently_demo/
      cd openosp_evidently_demo
      cd ./live
-    docker-compose build
+     docker-compose build
 
      docker-compose up & 
 

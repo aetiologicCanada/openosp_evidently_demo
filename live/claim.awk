@@ -1,7 +1,7 @@
 # this awk file parses the remittance advice file, using v 4.4 of the Teleplan guide
 # see Chapter 2 for record layouts.
 
-system("mkdir  -p /tmp/evidently_data")
+system("mkdir  -p /output/evidently_data")
 
 
 
@@ -37,5 +37,5 @@ if(rec_code =="C02")
     record = (substr($0,1,25)"----------____--"substr($0,42, 34 )"---------------"substr($0,92,40)"19991231"substr($0,140));
   else next
 }
-outputfile = "/tmp/evidently_data/"data_centre"_claim_"basename(FILENAME){}
+outputfile = "/output/evidently_data/"data_centre"_claim_"basename(FILENAME){}
 {print record > outputfile}

@@ -16,7 +16,7 @@ with open('config.yml') as f:
 
 SOURCE_DIR = '/data'
 TARGET_DIR = '/output'
-TARGET_DATA_DIR = os.path.join(TARGET_DIR, '/tmp/evidently_data')
+TARGET_DATA_DIR = os.path.join(TARGET_DIR, '/output/evidently_data')
 ENCRYPT_KEY = '/app/encrypt.pub.pem'
 SFTP_KEY = '/app/sftp.pk'
 ENCRYPT_KEY_PKCS8 = ENCRYPT_KEY + '.pem'

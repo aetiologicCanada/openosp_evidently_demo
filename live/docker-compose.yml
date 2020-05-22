@@ -8,6 +8,7 @@ services:
       - type: volumne
         source: ./data
         target: /data
+        read_only: true
       - ./config.yml:/app/config.yml
       - ./test_script.awk:/scripts/test_script.awk
 

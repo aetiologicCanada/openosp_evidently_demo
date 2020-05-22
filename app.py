@@ -41,7 +41,7 @@ def run_awk_scripts():
         assert os.path.exists(
             script_path), 'Missing file {}'.format(script_path)
         cmd = 'awk -f {} -v output_directory={} {}'.format(script_path,
-                                                          TARGET_DATA_DIR, script['target_file_glob'])
+                                                           TARGET_DATA_DIR, script['target_file_glob'])
         logging.info(cmd)
         subprocess.check_call(cmd, shell=True)
 
@@ -119,7 +119,6 @@ def run_file_trigger(file_event):
     if is_trigger_file(file_event.src_path):
         try:
             logging.info("Workflow triggered")
-            enc_key = encrypt_setup()
             run_awk_scripts()
             tarball = tar_output_files()
             encrypted_file = encrypt_tar_ball(tarball)

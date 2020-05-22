@@ -5,7 +5,7 @@ services:
   evidently:
     build: ../.
     volumes:
-      - type: volumne
+      - type: volume
         source: /home/open-osp-demo-user
         target: /data
         read_only: true

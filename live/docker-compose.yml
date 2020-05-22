@@ -1,18 +1,18 @@
 ---
-version: "3"
+version: "3.2"
 
 services:
   evidently:
     build: ../.
     volumes:
-	- type: volume
-        	source: /root/.../OscarDocument
-        	target: /data
-                 read_only: true      
-      - /root/open-osp/volumes/OscarDocument:/data
+      - type: bind
+        source: /root/open-osp/volumes/OscarDocument
+        target: /data
+        read_only: true
       - ./config.yml:/app/config.yml
       - ./remittance.awk:/scripts/remittance.awk
-      - ./claim.awk:/scripts/claim.awk
+      - ./claim.awk:/scripts/claim.awk    
+              
 
       # Add arbitrary test scripts here and in config.yaml
       # - ./test_script_01.awk:/scripts/test_script_01.awk
@@ -20,7 +20,7 @@ services:
       # - ./test_script_03.awk:/scripts/test_script_03.awk
 
       # This is the public key that we used to encrypt the file.
-      #    - ./public-key.pem:/app/encrypt.pub
       - ./evidently_rsa.pub.pem:/app/encrypt.pub.pem
       # This is the RSA key for the end user's remote user (e.g. testUser01).
       - ./sftp_rsa:/app/sftp.pk
+

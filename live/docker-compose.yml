@@ -5,14 +5,15 @@ services:
   evidently:
     build: ../.
     volumes:
+      # We are using a `bind` here only because we found it non-trivial to use
+      # a `read_only` volume that uses an absolute path as its source.
       - type: bind
         source: /root/open-osp/volumes/OscarDocument
         target: /data
         read_only: true
       - ./config.yml:/app/config.yml
       - ./remittance.awk:/scripts/remittance.awk
-      - ./claim.awk:/scripts/claim.awk    
-              
+      - ./claim.awk:/scripts/claim.awk
 
       # Add arbitrary test scripts here and in config.yaml
       # - ./test_script_01.awk:/scripts/test_script_01.awk
@@ -23,4 +24,3 @@ services:
       - ./evidently_rsa.pub.pem:/app/encrypt.pub.pem
       # This is the RSA key for the end user's remote user (e.g. testUser01).
       - ./sftp_rsa:/app/sftp.pk
-

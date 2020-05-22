@@ -52,7 +52,6 @@ def tar_output_files():
     logging.info('Gzipping {} into {}'.format(TARGET_DATA_DIR, result_file))
     subprocess.check_call(['tar', 'czf', result_file, TARGET_DATA_DIR])
     logging.info('Gzip completed')
-    file_stats = os.stat(result_file)
     return result_file
 
 
@@ -60,17 +59,13 @@ def encrypt_setup():
     # follows: https://www.czeskis.com/random/openssl-encrypt-file.html
 
     # generate a symmetric key
-
     logging.info('Generating symmetric key')
-
     subprocess.check_call(
         'openssl rand -base64 32 > {}'.format(SYMMETRIC_KEY),
         shell=True)
     logging.info("bin created")
 
-
-# encrypt the symmetric key using the asymmetric keys
-
+    # encrypt the symmetric key using the asymmetric keys
     subprocess.check_call(
         'openssl rsautl -encrypt -inkey {} -pubin -in {} -out {}'.format(
             ENCRYPT_KEY, SYMMETRIC_KEY, SYMMETRIC_KEY_ENC),

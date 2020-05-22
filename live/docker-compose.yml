@@ -8,7 +8,8 @@ services:
 	- type: volume
         	source: /root/.../OscarDocument
         	target: /data
-        read_only: true      - /root/open-osp/volumes/OscarDocument:/data
+                 read_only: true      
+      - /root/open-osp/volumes/OscarDocument:/data
       - ./config.yml:/app/config.yml
       - ./remittance.awk:/scripts/remittance.awk
       - ./claim.awk:/scripts/claim.awk

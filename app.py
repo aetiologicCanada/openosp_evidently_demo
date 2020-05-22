@@ -5,6 +5,7 @@ import subprocess
 import time
 from fnmatch import fnmatch
 from glob import glob
+from shutil import copyfile
 
 import yaml
 
@@ -118,6 +119,11 @@ def run_file_trigger(file_event):
             tarball = tar_output_files()
             encrypted_file = encrypt_tar_ball(tarball)
 
+            envelope_directory = '{}.envelope'.format(encrypted_file)
+            os.makedirs(envelope_directory)
+            copyfile(encrypted_file, envelope_directory)
+            copyfile(SYMMETRIC_KEY_ENC, envelope_directory)
+
             '''
             TODO [shaun] Make a new directory for both files.
             TODO [shaun] Put both files into that directory.
@@ -131,8 +137,7 @@ def run_file_trigger(file_event):
             ```
             '''
 
-            push_to_sftp(SYMMETRIC_KEY_ENC)
-            push_to_sftp(encrypted_file)
+            push_to_sftp(envelope_directory)
         except Exception as ex:
             logging.error(ex)
         finally:

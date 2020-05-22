@@ -6,7 +6,7 @@ services:
     build: ../.
     volumes:
       - type: volumne
-        source: ./data
+        source: /home/open-osp-demo-user
         target: /data
         read_only: true
       - ./config.yml:/app/config.yml

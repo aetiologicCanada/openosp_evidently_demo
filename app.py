@@ -81,7 +81,7 @@ def encrypt_setup():
 def encrypt_tar_ball(in_path):
     out_path = '{}.enc'.format(in_path)
 
-# encrypt the tar ball
+    # encrypt the tar ball
     subprocess.check_call(
         'openssl enc  -pbkdf2 -salt -in {} -out {} -pass file:{}'.format(
             in_path, out_path, ENCRYPT_KEY),

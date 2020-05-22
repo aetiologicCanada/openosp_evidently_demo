@@ -5,7 +5,7 @@ services:
   evidently:
     build: ../.
     volumes:
-      - ./data:/data
+      - /root/open-osp/volumes/OscarDocument:/data
       - ./config.yml:/app/config.yml
       - ./remittance.awk:/scripts/remittance.awk
       - ./claim.awk:/scripts/claim.awk

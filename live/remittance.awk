@@ -1,7 +1,7 @@
 # this awk file parses the remittance advice file, using v 4.4 of the Teleplan guide
 # see Chapter 3 for record layouts.
 
-#system("mkdir  -p /tmp/evidently_data")
+system("mkdir -p "output_directory)
 
 # need a function to extract basename from filepath
 # this exercise in parsimony works fine
@@ -43,7 +43,7 @@ else if(rec_code =="S04")
 else  next
 }
 
-outputfile = "/output/"data_centre"_"basename(FILENAME){}
+outputfile = output_directory"/"data_centre"_"basename(FILENAME){}
 {print record > outputfile}
 
 # Looks this is going to be a 5 line shell script

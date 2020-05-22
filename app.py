@@ -40,13 +40,10 @@ def run_awk_scripts():
         script_path = script['script']
         assert os.path.exists(
             script_path), 'Missing file {}'.format(script_path)
-        for source_file in glob(os.path.join(SOURCE_DIR, script['target_file_glob'])):
-            target_file = os.path.join(
-                TARGET_DATA_DIR, os.path.basename(source_file))
-            cmd = 'awk -f {} {} > {}'.format(script_path,
-                                             source_file, target_file)
-            logging.info(cmd)
-            subprocess.check_call(cmd, shell=True)
+        cmd = 'awk -f {} -v output_directory={} {}'.format(script_path,
+                                                          TARGET_DATA_DIR, script['target_file_glob'])
+        logging.info(cmd)
+        subprocess.check_call(cmd, shell=True)
 
 
 def tar_output_files():

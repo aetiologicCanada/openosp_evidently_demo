@@ -1,7 +1,7 @@
 # this awk file parses the remittance advice file, using v 4.4 of the Teleplan guide
 # see Chapter 2 for record layouts.
 
-system("mkdir  -p /output/evidently_data")
+system("mkdir  -p "output_directory)
 
 
 
@@ -18,6 +18,8 @@ function basename(file) {
 rec_code = substr($0,1,3) {}
 
 {
+if(index(FILENAME, "html")) NEXTFILE
+if(index(FILENAME, "HTML")) NEXTFILE
 
 # This gets the data centre name for the output file. 
 
@@ -37,5 +39,5 @@ if(rec_code =="C02")
     record = (substr($0,1,25)"----------____--"substr($0,42, 34 )"---------------"substr($0,92,40)"19991231"substr($0,140));
   else next
 }
-outputfile = "/output/evidently_data/"data_centre"_claim_"basename(FILENAME){}
+outputfile = output_directory"/"data_centre"_claim_"basename(FILENAME){}
 {print record > outputfile}

@@ -57,7 +57,9 @@ def tar_output_files():
 
 
 def encrypt_setup():
-    # follows: https://www.czeskis.com/random/openssl-encrypt-file.html
+    """Generate the symmetric key and its encrypted counterpart.
+    Follows https://www.czeskis.com/random/openssl-encrypt-file.html
+    """
 
     # generate a symmetric key
     logging.info('Generating symmetric key')
@@ -74,6 +76,9 @@ def encrypt_setup():
 
 
 def encrypt_tar_ball(in_path):
+    """Encrypt the tarball with the symmetric key.
+    """
+
     out_path = '{}.enc'.format(in_path)
 
     # encrypt the tar ball
@@ -105,6 +110,10 @@ def push_to_sftp(file_path):
 
 
 def create_sftp_envelope(files):
+    """Create a new tar achive that contains 
+    1. the symmetrically encrypted SFTP payload and 
+    2. the assymmetrically encrypted symmetric key that encrypted it.
+    """
     logging.info('Creating sftp envelope for {}'.format(files))
     envelope = 'evidently_{}_message.tar'.format(TIME_STAMP)
     subprocess.check_call(
@@ -124,18 +133,12 @@ def run_file_trigger(file_event):
             logging.info("Workflow triggered")
             run_awk_scripts()
             tarball = tar_output_files()
-
-            # Generate the symmetric key and its encrypted counterpart.
             encrypt_setup()
-
-            # Encrypt the tarball with the symmetric key.
             encrypted_file = encrypt_tar_ball(tarball)
-
             sftp_envelope = create_sftp_envelope([
                 encrypted_file,
                 SYMMETRIC_KEY_ENC
             ])
-
             push_to_sftp(sftp_envelope)
         except Exception as ex:
             logging.error(ex)

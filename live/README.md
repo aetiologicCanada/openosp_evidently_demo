@@ -6,28 +6,22 @@ sftp -i sftp_rsa_testUser01 testUser01@pickup.evidently.ca
 
 # Test using the Docker container.
 
-In one bash terminal, start the container.
+Start the container:
 
 ```bash
 cd live
-docker-compose build
-docker-compose up -d # daemon mode
-docker-compose logs -f # tail the logs
-```
-
-Note: we can force a rebuild with `up` like this:
-
-```bash
 docker-compose up --force-recreate --build -d
+cd /root/open-osp/volumes/OscarDocument
 ```
 
-In another bash terminal, trigger the watcher. The watcher will send the file to
-then public.evidently.ca server. The local log output will be visible in the
-previous terminal window that we recently started.
+Then trigger the watcher. The watcher will send the file to
+then public.evidently.ca server. Tail the logs to see the
+SFTP result.
 
 ```bash
 cd live/data
-touch test01.trigger
+touch teleplanremit_01
+docker-compose logs -f # tail the logs
 ```
 
 Decrypt the payload.

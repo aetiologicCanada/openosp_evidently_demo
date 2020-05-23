@@ -71,7 +71,6 @@ def encrypt_setup():
         'openssl rsautl -encrypt -inkey {} -pubin -in {} -out {}'.format(
             ENCRYPT_KEY, SYMMETRIC_KEY, SYMMETRIC_KEY_ENC),
         shell=True)
-    return(SYMMETRIC_KEY)
 
 
 def encrypt_tar_ball(in_path):
@@ -80,7 +79,7 @@ def encrypt_tar_ball(in_path):
     # encrypt the tar ball
     subprocess.check_call(
         'openssl enc  -pbkdf2 -salt -in {} -out {} -pass file:{}'.format(
-            in_path, out_path, ENCRYPT_KEY),
+            in_path, out_path, SYMMETRIC_KEY_ENC),
         shell=True)
 
     #file_stats = os.stat(out_path)
@@ -105,6 +104,14 @@ def push_to_sftp(file_path):
     logging.info("SFTP completed")
 
 
+def create_sftp_envelope(files):
+    logging.info('Creating sftp envelope for {}'.format(files))
+    envelope = 'evidently_{}_message.tar'.format(TIME_STAMP)
+    subprocess.check_call(
+        ['tar', 'cfv', envelope, *files])
+    return envelope
+
+
 def cleanup():
     shutil.rmtree(TARGET_DIR, TARGET_DATA_DIR)
     os.makedirs(TARGET_DATA_DIR, exist_ok=True)
@@ -117,27 +124,19 @@ def run_file_trigger(file_event):
             logging.info("Workflow triggered")
             run_awk_scripts()
             tarball = tar_output_files()
+
+            # Generate the symmetric key and its encrypted counterpart.
+            encrypt_setup()
+
+            # Encrypt the tarball with the symmetric key.
             encrypted_file = encrypt_tar_ball(tarball)
 
-            envelope_directory = '{}.envelope'.format(encrypted_file)
-            os.makedirs(envelope_directory)
-            copyfile(encrypted_file, envelope_directory)
-            copyfile(SYMMETRIC_KEY_ENC, envelope_directory)
+            sftp_envelope = create_sftp_envelope([
+                encrypted_file,
+                SYMMETRIC_KEY_ENC
+            ])
 
-            '''
-            TODO [shaun] Make a new directory for both files.
-            TODO [shaun] Put both files into that directory.
-            TODO [shaun] SFTP that single directory with one call to `push_to_sftp`.
-
-            Here is the target directory and naming structure.
-            ```
-            evidently_date_time_message/
-                evidently_date_time_key.bin.enc
-                evidently_date_time_payload.tar.gz.enc
-            ```
-            '''
-
-            push_to_sftp(envelope_directory)
+            push_to_sftp(sftp_envelope)
         except Exception as ex:
             logging.error(ex)
         finally:
@@ -150,8 +149,10 @@ class Handler(FileSystemEventHandler):
 
 
 if __name__ == '__main__':
+    # https://stackoverflow.com/questions/38537905/set-logging-levels
     logging.basicConfig(level=logging.INFO,
                         format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+    logging.getLogger().setLevel(logging.INFO)
 
     observer = Observer()
     observer.schedule(Handler(), SOURCE_DIR)

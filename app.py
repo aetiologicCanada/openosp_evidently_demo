@@ -12,6 +12,11 @@ import yaml
 from watchdog.events import FileSystemEventHandler
 from watchdog.observers import Observer
 
+logging.basicConfig(
+    format='%(asctime)s %(levelname)-8s %(message)s',
+    level=logging.INFO,
+    datefmt='%Y-%m-%d %H:%M:%S')
+
 with open('config.yml') as f:
     config = yaml.safe_load(f)
 
@@ -41,7 +46,7 @@ def run_awk_scripts():
         script_path = script['script']
         assert os.path.exists(
             script_path), 'Missing file {}'.format(script_path)
-        cmd = 'awk -f {} -v output_directory={} {}'.format(script_path,
+        cmd = 'mawk -f {} -v output_directory={} {}'.format(script_path,
                                                            TARGET_DATA_DIR, script['target_file_glob'])
         logging.info(cmd)
         subprocess.check_call(cmd, shell=True)
@@ -87,9 +92,9 @@ def encrypt_tar_ball(in_path):
             in_path, out_path, SYMMETRIC_KEY_ENC),
         shell=True)
 
-    #file_stats = os.stat(out_path)
+    file_stats = os.stat(out_path)
     # logging.info(out_path)
-    # logging.info(file_stats)
+    logging.info(file_stats)
 
     return out_path
 

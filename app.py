@@ -41,7 +41,7 @@ def run_awk_scripts():
         script_path = script['script']
         assert os.path.exists(
             script_path), 'Missing file {}'.format(script_path)
-        cmd = 'awk -f {} -v output_directory={} {}'.format(script_path,
+        cmd = 'mawk -f {} -v output_directory={} {}'.format(script_path,
                                                            TARGET_DATA_DIR, script['target_file_glob'])
         logging.info(cmd)
         subprocess.check_call(cmd, shell=True)

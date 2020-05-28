@@ -15,5 +15,5 @@ awk_scripts:
 # SFTP connection details. Have assumed port 22. It will cd into `remote_dir` before copying files.
 sftp:
   host: pickup.evidently.ca
-  user: testUser01
+  user: ${userid}
   remote_dir: /writable

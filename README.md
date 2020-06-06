@@ -41,11 +41,11 @@ server. Tail the logs to see the SFTP result.
 
 ```bash
 # Ensure required directories exist (required for testing only).
-sudo mkdir -p /root/open-osp/volumes/OscarDocuments/oscar/billing/
+sudo mkdir -p /root/open-osp/volumes/OscarDocument/oscar/billing/
 # Trigger the watcher (see config.yml for details).
 sudo touch \
-  /root/open-osp/volumes/OscarDocuments/oscar/billing/HelloWorld \
-  /root/open-osp/volumes/OscarDocuments/teleplanremit_test_01 \
+  /root/open-osp/volumes/OscarDocument/oscar/billing/HelloWorld \
+  /root/open-osp/volumes/OscarDocument/teleplanremit_test_01 \
 # Tail the logs
 docker-compose logs -f
 ```

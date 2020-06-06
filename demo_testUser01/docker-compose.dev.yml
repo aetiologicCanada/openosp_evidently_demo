@@ -13,7 +13,7 @@ services:
       # We are using a `bind` here only because we found it non-trivial to use
       # a `read_only` volume that uses an absolute path as its source.
       - type: bind
-        source: /root/open-osp/volumes/OscarDocuments
+        source: /root/open-osp/volumes/OscarDocument
         target: /data
         read_only: true
       # Add the public key that we use to encrypt the file.

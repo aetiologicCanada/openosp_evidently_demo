@@ -44,10 +44,9 @@ def is_trigger_file(file_path):
 def run_awk_scripts():
     for script in config['awk_scripts']:
         script_path = script['script']
-        assert os.path.exists(
-            script_path), 'Missing file {}'.format(script_path)
-        cmd = 'mawk -f {} -v output_directory={} {}'.format(script_path,
-                                                           TARGET_DATA_DIR, script['target_file_glob'])
+        target_file_glob = script['target_file_glob']
+        assert os.path.exists(script_path), 'Missing file {}'.format(script_path)
+        cmd = 'mawk -f {} -v output_directory={} {}'.format(script_path, TARGET_DATA_DIR, target_file_glob)
         logging.info(cmd)
         subprocess.check_call(cmd, shell=True)
 

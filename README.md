@@ -1,29 +1,41 @@
-To install
+# Test using SFTP directly.
 
-Obtain a shell on an open-osp instance
-     
-     git clone https://github.com/aetiologicCanada/openosp_evidently_demo/
-     cd openosp_evidently_demo
-     
-     modify evidently_env to correct userid
-     install user-specific keys as provided.. default userid (testUser01) is available for testing, but
-     data is immediately discarded.
-     
-     cd ./live
-     docker-compose build
+```bash
+cd demo_testUser01
+chmod 700 sftp_rsa
+sftp -i sftp_rsa testUser01@pickup.evidently.ca
+```
 
-     docker-compose up & 
+# Test using Docker.
 
-To force initial transfer of data add a new file of filename teleplanremit.. to ../OscarDocument  
-e.g. :
+Start the container.
 
-    cd /root/open-osp/volumes/OscarDocuments
-    rm -f teleplanremit_evidently_junk
-    touch teleplanremit_evidently_jun
-    # This just generates a file with the appropriate trigger filename 
-    # and this trigers the scrub, tarball, encrypt, sftp and cleanup processes 
+```bash
+cd demo_testUser01
+docker-compose up --force-recreate --build -d
+```
 
-monitor with:
+Then trigger the watcher. The watcher will send the file to the `public.evidently.ca`
+server. Tail the logs to see the SFTP result.
 
-    docker-compose logs -f to see files send to evidently.
+```bash
+# Ensure required directories exist (required for testing only).
+sudo mkdir -p /root/open-osp/volumes/OscarDocuments/oscar/billing/
+# Trigger the watcher (see config.yml for details).
+sudo touch \
+  /root/open-osp/volumes/OscarDocuments/oscar/billing/HelloWorld \
+  /root/open-osp/volumes/OscarDocuments/teleplanremit_test_01 \
+# Tail the logs
+docker-compose logs -f 
+```
 
+Decrypt the payload. Note that `chauffeur` only works if we are running the VPN.
+
+```bash
+cd demo_testUser01
+scp chauffeur@vpn.pickup.evidently.ca:/home/testUser01/sftp/writable/*.enc .
+openssl rsautl -decrypt -inkey ./encrypt_rsa -in evidently-20200508-224231.tar.gz.enc -out output.tar.gz
+gunzip output.tar.gz
+tar -xf output.tar
+cd output
+```

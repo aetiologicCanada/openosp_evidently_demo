@@ -3,9 +3,9 @@ version: "3.2"
 
 services:
   evidently:
-    # This docker-compose.yml file is the default for this directory and acquires
-    # the docker image from Docker Hub.
-    image: evidentlyslocker/openosp_evidently_demo:latest
+    # This docker-compose.dev.yml file is for local development and rebuilds
+    # the docker image locally each time we run it.
+    build: ../.
     env_file:
       - evidently_env
     volumes:

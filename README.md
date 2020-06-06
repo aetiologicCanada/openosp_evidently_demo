@@ -1,4 +1,25 @@
-# Test using SFTP directly.
+# Production
+
+## Image Deployment
+
+```bash
+sudo docker image build -t evidentlyslocker/openosp_evidently_demo:latest .
+sudo docker push evidentlyslocker/openosp_evidently_demo:latest
+```
+
+## Use of Deployed Image
+
+```bash
+cd demo_testUser01
+docker-compose stop
+docker-compose rm -f
+docker-compose pull
+docker-compose up -d
+```
+
+# Development
+
+## Locally Testing using SFTP directly.
 
 ```bash
 cd demo_testUser01
@@ -6,7 +27,7 @@ chmod 700 sftp_rsa
 sftp -i sftp_rsa testUser01@pickup.evidently.ca
 ```
 
-# Test using Docker.
+## Locally Testing using Docker.
 
 Start the container.
 
@@ -26,7 +47,7 @@ sudo touch \
   /root/open-osp/volumes/OscarDocuments/oscar/billing/HelloWorld \
   /root/open-osp/volumes/OscarDocuments/teleplanremit_test_01 \
 # Tail the logs
-docker-compose logs -f 
+docker-compose logs -f
 ```
 
 Decrypt the payload. Note that `chauffeur` only works if we are running the VPN.

@@ -22,6 +22,10 @@ mkdir -p /root/open-osp/volumes/OscarDocument/oscar/billing
 
 touch /root/open-osp/volumes/OscarDocument/oscar/billing/Hempty_file
 
+# note that these steps are conducted outside of the docker container because the docker-container is mounted
+# read only and cannot make the folders and files
+
+
 mkdir demo_testUser01
 cd demo_testUser01
 docker-compose stop

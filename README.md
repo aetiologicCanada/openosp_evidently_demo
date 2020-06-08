@@ -14,6 +14,7 @@ cd demo_testUser01
 docker-compose stop
 docker-compose rm -f
 docker-compose pull
+chmod 700 sftp_rsa
 docker-compose up -d
 ```
 
@@ -23,7 +24,7 @@ docker-compose up -d
 
 ```bash
 cd demo_testUser01
-chmod 700 sftp_rsa
+
 sftp -i sftp_rsa testUser01@pickup.evidently.ca
 ```
 

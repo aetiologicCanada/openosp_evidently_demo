@@ -10,6 +10,19 @@ sudo docker push evidentlyslocker/openosp_evidently_demo:latest
 ## Use of Deployed Image
 
 ```bash
+# I switch to /root/evidently and put the user folders there, but each to their own
+# mkdir /root/evidently
+# cd /root/evidently
+# on initialization, there is no ../OscarDocuments/oscar/billing folder
+# so, just in case, we create a billing folder if one does not already exist
+
+mkdir -p /root/open-osp/volumes/OscarDocument/oscar/billing
+
+# throw a blank file in there just to keep awk happy.
+
+touch /root/open-osp/volumes/OscarDocument/oscar/billing/Hempty_file
+
+mkdir demo_testUser01
 cd demo_testUser01
 docker-compose stop
 docker-compose rm -f

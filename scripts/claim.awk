@@ -1,27 +1,30 @@
-# this awk file parses the remittance advice file, using v 4.4 of the Teleplan guide
 # see Chapter 2 for record layouts.
+BEGIN{
 
-system("mkdir  -p "output_directory)
+system("mkdir -p "output_directory)
+}
 
 # need a function to extract basename from filepath
 # this exercise in parsimony works fine
-
 function basename(file) {
     sub(".*/", "", file)
     return file
-  }
-
-#some vars.
-
-rec_code = substr($0,1,3) {}
+}
 
 {
-if(index(FILENAME, "html")) NEXTFILE
-if(index(FILENAME, "HTML")) NEXTFILE
 
-# This gets the data centre name for the output file.
+#some vars.  
+rec_code = substr($0,1,3)
+first_letter = substr(rec_code,1,1)
+first_two = substr(rec_code,1,2)
 
-if(NR == 1) data_centre = substr($0,4,5)
+# This gets the data centre name for the output file. 
+
+if(index(FILENAME, "html")|| index(FILENAME, "HTML")) NEXTFILE
+
+if(FNR ==1) data_centre = substr($0,4,5)
+if(FNR ==1) close(outputfile)
+if(FNR ==1) outputfile = output_directory data_centre "_" basename(FILENAME)
 
 #C02
 #removes 26-35 PHN
@@ -34,7 +37,7 @@ if(NR == 1) data_centre = substr($0,4,5)
 
 if(rec_code =="C02")
     record = (substr($0,1,25)"----------____--"substr($0,42, 34 )"---------------"substr($0,92,40)"19991231"substr($0,140));
-  else next
+  else record=""
+  
+print record > outputfile
 }
-outputfile = output_directory"/"data_centre"_claim_"basename(FILENAME){}
-{print record > outputfile}

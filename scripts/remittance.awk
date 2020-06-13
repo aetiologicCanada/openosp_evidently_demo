@@ -22,8 +22,11 @@ first_two = substr($0,1,2)
 # This gets the data centre name for the output file. 
 
 if(FNR ==1) data_centre = substr($0,4,5)
+#if(FNR ==1) outputfile = /dev/null
 if(FNR ==1) close(outputfile)
-if(FNR ==1) outputfile = output_directory data_centre "_" basename(FILENAME)
+if(FNR ==1) outputfile = output_directory "/" data_centre "_" basename(FILENAME)
+
+#close outputfile
 # now we parse the various input record types
 #print(data_centre > clinic_id)
 
@@ -45,8 +48,9 @@ else if (index(rec_code, "S03")|| index(rec_code, "S02") || index(rec_code, "S00
 else if(index(rec_code, "S04")) 
       record = substr($0,1,69) "--------" substr($0,78);
 
-else record = ""
-
+else record = "";
+}
+{
 
 print record > outputfile
 if(EOF) close(outputfile)

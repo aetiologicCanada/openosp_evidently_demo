@@ -17,6 +17,6 @@ services:
         target: /data
         read_only: true
       # Add the public key that we use to encrypt the file.
-      - ./evidently_rsa.pub.pem:/app/encrypt.pub.pem
+      - ./encrypt_rsa_public.pem:/app/encrypt.pub.pem
       # Add the RSA key for the end user SFTP access.
-      - ./sftp_rsa:/app/sftp.pk
+      - ./sftp_rsa.pub:/app/sftp.pk

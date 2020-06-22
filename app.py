@@ -33,10 +33,11 @@ SYMMETRIC_KEY     = '/output/key.bin'
 SYMMETRIC_KEY_ENC = '/output/evidently_{}_key.bin.enc'.format(TIME_STAMP)
 
 shutil.rmtree(TARGET_DATA_DIR, ignore_errors=True, onerror=None)
-
 os.makedirs(TARGET_DATA_DIR, exist_ok=True)
 os.makedirs(TARGET_DIR,      exist_ok=True)
-
+print(SFTP_KEY)
+print(SOURCE_DIR_CLAIMS)
+print(SOURCE_DIR)
 
 def is_trigger_file(file_path):
     return fnmatch(file_path, config['trigger_file_glob'])
@@ -167,3 +168,4 @@ if __name__ == '__main__':
     observer.start()
     logging.info("Watching {}".format(SOURCE_DIR))
     observer.join()
+

@@ -1,3 +1,5 @@
+THESE INSTRUCTIONS ARE NO LONGER VALID
+DO NOT USE
 # Production
 
 ## Image Deployment
@@ -16,11 +18,11 @@ sudo docker push evidentlyslocker/openosp_evidently_demo:latest
 # on initialization, there is no ../OscarDocuments/oscar/billing folder
 # so, just in case, we create a billing folder if one does not already exist
 
-mkdir -p /root/open-osp/volumes/OscarDocument/oscar/billing
+mkdir -p /root/open-osp/volumes/oscar/billing/download
 
 # throw a blank file in there just to keep awk happy.
 
-touch /root/open-osp/volumes/OscarDocument/oscar/billing/Hempty_file
+touch /root/open-osp/volumes/oscar/billing/download/Hempty_file
 
 # note that these steps are conducted outside of the docker container because the docker-container is mounted
 # read only and cannot make the folders and files

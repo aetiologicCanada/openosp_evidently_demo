@@ -20,15 +20,16 @@ logging.basicConfig(
 with open('config.yml') as f:
     config = yaml.safe_load(f)
 
-SOURCE_DIR = '/data'
-TARGET_DIR = '/output'
-TARGET_DATA_DIR = os.path.join(TARGET_DIR, '/output/evidently_data')
-ENCRYPT_KEY = '/app/encrypt.pub.pem'
-SFTP_KEY = '/app/sftp.pk'
+SOURCE_DIR         = '/data'
+SOURCE_DIR_CLAIMS  = '/data1'
+TARGET_DIR         =  '/output'
+TARGET_DATA_DIR    = os.path.join(TARGET_DIR, '/output/evidently_data')
+ENCRYPT_KEY        = '/app/encrypt.pub.pem'
+SFTP_KEY           = '/app/sftp.pk'
 ENCRYPT_KEY_PKCS8 = ENCRYPT_KEY + '.pem'
-TIME_STAMP = time.strftime("%Y%m%d-%H%M%S")
+TIME_STAMP        = time.strftime("%Y%m%d-%H%M%S")
 logging.info(TIME_STAMP)
-SYMMETRIC_KEY = '/output/key.bin'
+SYMMETRIC_KEY     = '/output/key.bin'
 SYMMETRIC_KEY_ENC = '/output/evidently_{}_key.bin.enc'.format(TIME_STAMP)
 
 shutil.rmtree(TARGET_DATA_DIR, ignore_errors=True, onerror=None)

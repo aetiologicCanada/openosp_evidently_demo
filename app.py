@@ -23,7 +23,7 @@ with open('config.yml') as f:
 SOURCE_DIR         = '/data'
 SOURCE_DIR_CLAIMS  = '/data1'
 TARGET_DIR         =  '/output'
-TARGET_DATA_DIR    = os.path.join(TARGET_DIR, '/output/evidently_data')
+TARGET_DATA_DIR    = os.path.join(TARGET_DIR, '/output/evidently_data/')
 ENCRYPT_KEY        = '/app/encrypt.pub.pem'
 SFTP_KEY           = '/app/sftp.pk'
 ENCRYPT_KEY_PKCS8 = ENCRYPT_KEY + '.pem'
@@ -153,6 +153,10 @@ class Handler(FileSystemEventHandler):
     def on_created(self, event):
         run_file_trigger(event)
 
+
+class Handler(FileSystemEventHandler):
+    def on_moved(self, event):
+        run_file_trigger(event)
 
 if __name__ == '__main__':
     # https://stackoverflow.com/questions/38537905/set-logging-levels

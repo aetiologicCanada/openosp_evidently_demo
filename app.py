@@ -131,7 +131,7 @@ def cleanup():
 
 def run_file_trigger(file_event):
     logging.info("File event {}".format(file_event))
-    if is_trigger_file(file_event.src_path):
+    if s_trigger_file(file_event.dest.path):
         try:
             logging.info("Workflow triggered")
             run_awk_scripts()
@@ -149,9 +149,9 @@ def run_file_trigger(file_event):
             cleanup()
 
 
-class Handler(FileSystemEventHandler):
-    def on_created(self, event):
-        run_file_trigger(event)
+#class Handler(FileSystemEventHandler):
+#    def on_created(self, event):
+#        run_file_trigger(event)
 
 
 class Handler(FileSystemEventHandler):

@@ -10,7 +10,7 @@ awk_scripts:
   - script: /scripts/remittance.awk
     target_file_glob: "/data/teleplanremit*"
   - script: /scripts/claim.awk
-    target_file_glob: "/data/oscar/billing/H*"
+    target_file_glob: "/data1/H*"
 
 # SFTP connection details. Have assumed port 22. It will cd into `remote_dir` before copying files.
 sftp:

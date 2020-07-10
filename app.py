@@ -155,6 +155,9 @@ class Handler(FileSystemEventHandler):
     def on_created(self, event):
         run_file_trigger(event)
 
+    def on_moved(self, event):
+        run_file_trigger(event)
+
 
 if __name__ == '__main__':
     # https://stackoverflow.com/questions/38537905/set-logging-levels

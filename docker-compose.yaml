@@ -11,11 +11,11 @@ services:
       # We are using a `bind` here only because we found it non-trivial to use
       # a `read_only` volume that uses an absolute path as its source.
       - type: bind
-        source: ../../monk/volumes/OscarDocument/oscar/document
+        source: /home/jenkins/workspace/monk/volumes/OscarDocument/oscar/document 
         target: /data
         read_only: true
       - type: bind
-        source: ../../monk/volumes/OscarDocument/oscar/billing/download
+        source: /home/jenkins/workspace/monk/volumes/OscarDocument/oscar/billing/download
         target: /data1
         read_only: true
       # Add the public key that we use to encrypt the file.

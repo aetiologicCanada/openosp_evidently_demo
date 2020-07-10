@@ -158,8 +158,6 @@ class Handler(FileSystemEventHandler):
     def on_moved(self, event):
         run_file_trigger(event)
 
-    def on_moved(self, event):
-        run_file_trigger(event)
 
 
 if __name__ == '__main__':

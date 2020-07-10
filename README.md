@@ -1,5 +1,7 @@
-THESE INSTRUCTIONS ARE NO LONGER VALID
-DO NOT USE
+I have broken app.py.  The issue appears to be that the previous version assumed that the file teleplanremit was being created, when in fact it appears that it
+is being renamed/moved, and this is a distinct thing in the watchdog framework.  I attempted to modify the app to trigger the awk, encrypt, sftp function on move or create, but this has failed. My python skills have failed. 
+
+
 # Production
 
 ## Image Deployment
@@ -18,21 +20,22 @@ sudo docker push evidentlyslocker/openosp_evidently_demo:latest
 # on initialization, there is no ../OscarDocuments/oscar/billing folder
 # so, just in case, we create a billing folder if one does not already exist
 
-mkdir -p /root/open-osp/volumes/oscar/billing/download
+mkdir -p /home/jenkins/workspace/monk/volumes/OscarDocument/oscar/billing/document
+mkdir -p /home/jenkins/workspace/monk/volumes/OscarDocument/oscar/document
 
 # throw a blank file in there just to keep awk happy.
 
-touch /root/open-osp/volumes/oscar/billing/download/Hempty_file
+touch /home/jenkins/workspace/monk/volumes/OscarDocument/oscar/document/change_this_to_targetname.txt
+touch /home/jenkins/workspace/monk/volumes/OscarDocument/oscar/billing/download/Hempty_file
 
 # note that these steps are conducted outside of the docker container because the docker-container is mounted
 # read only and cannot make the folders and files
 
 
-mkdir demo_testUser01
+mkdir -p demo_testUser01
 cd demo_testUser01
 docker-compose stop
 docker-compose rm -f
-docker-compose pull
 chmod 700 sftp_rsa
 docker-compose up -d
 ```
@@ -61,12 +64,17 @@ server. Tail the logs to see the SFTP result.
 
 ```bash
 # Ensure required directories exist (required for testing only).
-sudo mkdir -p /root/open-osp/volumes/OscarDocument/oscar/billing/
+mkdir -p /home/jenkins/workspace/monk/volumes/OscarDocument/oscar/billing/download
+mkdir -p /home/jenkins/workspace/monk/volumes/OscarDocument/oscar/document
 # Trigger the watcher (see config.yml for details).
-sudo touch \
-  /root/open-osp/volumes/OscarDocument/oscar/billing/HelloWorld \
-  /root/open-osp/volumes/OscarDocument/teleplanremit_test_01 \
-# Tail the logs
+sudo -s 
+date >  \
+/home/jenkins/workspace/monk/volumes/OscarDocument/oscar/billing/download/Htest_file
+date > /home/jenkins/workspace/monk/volumes/OscarDocument/oscar/document/change_my_name.txt
+docker-compose logs -f  # should show no file sftp activity
+
+mv /home/jenkins/workspace/monk/volumes/OscarDocument/oscar/document/change_my_name.txt /home/jenkins/workspace/monk/volumes/OscarDocument/oscar/document/teleplanremit_testfile.txt
+#Tail the logs
 docker-compose logs -f
 ```
 

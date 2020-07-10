@@ -26,7 +26,7 @@ TARGET_DIR         =  '/output'
 TARGET_DATA_DIR    = os.path.join(TARGET_DIR, '/output/evidently_data/')
 ENCRYPT_KEY        = '/app/encrypt.pub.pem'
 SFTP_KEY           = '/app/sftp.pk'
-ENCRYPT_KEY_PKCS8 = ENCRYPT_KEY + '.pem'
+ENCRYPT_KEY_PKCS8 = ENCRYPT_KEY + '.pem' # TODO Why are we doubling up the '.pem' suffix here?
 TIME_STAMP        = time.strftime("%Y%m%d-%H%M%S")
 logging.info(TIME_STAMP)
 SYMMETRIC_KEY     = '/output/key.bin'
@@ -157,6 +157,10 @@ def run_file_trigger(file_event):
 class Handler(FileSystemEventHandler):
     def on_moved(self, event):
         run_file_trigger(event)
+
+    def on_moved(self, event):
+        run_file_trigger(event)
+
 
 if __name__ == '__main__':
     # https://stackoverflow.com/questions/38537905/set-logging-levels

@@ -20,6 +20,6 @@ services:
         source: /home/jenkins/workspace/monk/volumes/OscarDocument/oscar/billing/download
         target: /data1
       # Add the public key that we use to encrypt the file.
-      - ./evidently_rsa.pub.pem:/app/encrypt.pub.pem
+      - ./encrypt_rsa.pub.pem:/app/encrypt.pub.pem
       # Add the RSA key for the end user SFTP access.
-      - ./sftp_rsa:/app/sftp.pk
+      - ./sftp_rsa.pub:/app/sftp.pk

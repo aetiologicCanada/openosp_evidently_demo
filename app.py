@@ -129,9 +129,8 @@ def cleanup():
     os.makedirs(TARGET_DATA_DIR, exist_ok=True)
 
 
-def run_file_trigger(file_event):
-    logging.info("File event {}".format(file_event))
-    if s_trigger_file(file_event.dest.path):
+def run_file_trigger(dest_path):
+    if is_trigger_file(dest_path):
         try:
             logging.info("Workflow triggered")
             run_awk_scripts()
@@ -149,15 +148,13 @@ def run_file_trigger(file_event):
             cleanup()
 
 
-#class Handler(FileSystemEventHandler):
-#    def on_created(self, event):
-#        run_file_trigger(event)
-
-
 class Handler(FileSystemEventHandler):
     def on_moved(self, event):
-        run_file_trigger(event)
-
+        logging.info(event)
+        run_file_trigger(event.dest_path)
+    def on_created(self, event):
+        logging.info(event)
+        run_file_trigger(event.src_path)
 
 
 if __name__ == '__main__':
@@ -171,4 +168,3 @@ if __name__ == '__main__':
     observer.start()
     logging.info("Watching {}".format(SOURCE_DIR))
     observer.join()
-

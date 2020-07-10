@@ -152,12 +152,8 @@ def run_file_trigger(file_event):
 
 
 class Handler(FileSystemEventHandler):
-    def on_created(self, event):
+    def on_any_event(self, event):
         run_file_trigger(event)
-
-    def on_moved(self, event):
-        run_file_trigger(event)
-
 
 if __name__ == '__main__':
     # https://stackoverflow.com/questions/38537905/set-logging-levels
@@ -168,5 +164,5 @@ if __name__ == '__main__':
     observer = Observer()
     observer.schedule(Handler(), SOURCE_DIR)
     observer.start()
-    logging.info("Watching {}".format(SOURCE_DIR))
+    logging.info("Watching {} ...".format(SOURCE_DIR))
     observer.join()

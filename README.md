@@ -1,6 +1,5 @@
-I have broken app.py.  The issue appears to be that the previous version assumed that the file teleplanremit was being created, when in fact it appears that it
-is being renamed/moved, and this is a distinct thing in the watchdog framework.  I attempted to modify the app to trigger the awk, encrypt, sftp function on move or create, but this has failed. My python skills have failed. 
-
+I have broken app.py. The issue appears to be that the previous version assumed that the file teleplanremit was being created, when in fact it appears that it
+is being renamed/moved, and this is a distinct thing in the watchdog framework. I attempted to modify the app to trigger the awk, encrypt, sftp function on move or create, but this has failed. My python skills have failed.
 
 # Production
 
@@ -52,30 +51,28 @@ sftp -i sftp_rsa testUser01@pickup.evidently.ca
 
 ## Locally Testing using Docker.
 
-Start the container.
+Start the container and tail the logs.
 
 ```bash
 cd demo_testUser01
-docker-compose up --force-recreate --build -d
+docker-compose up -f docker-compose.dev.yml --force-recreate --build -d
+docker-compose logs -f
 ```
 
-Then trigger the watcher. The watcher will send the file to the `public.evidently.ca`
-server. Tail the logs to see the SFTP result.
+Then, open a new console and trigger the watcher. The watcher will send the file
+to the `public.evidently.ca` server. The tail of the logs will show the SFTP result.
 
 ```bash
 # Ensure required directories exist (required for testing only).
-mkdir -p /home/jenkins/workspace/monk/volumes/OscarDocument/oscar/billing/download
-mkdir -p /home/jenkins/workspace/monk/volumes/OscarDocument/oscar/document
+mkdir -p /root/open-osp/volumes/OscarDocument/oscar/billing/document
+mkdir -p /root/open-osp/volumes/OscarDocument/oscar/document
 # Trigger the watcher (see config.yml for details).
-sudo -s 
-date >  \
-/home/jenkins/workspace/monk/volumes/OscarDocument/oscar/billing/download/Htest_file
-date > /home/jenkins/workspace/monk/volumes/OscarDocument/oscar/document/change_my_name.txt
-docker-compose logs -f  # should show no file sftp activity
-
-mv /home/jenkins/workspace/monk/volumes/OscarDocument/oscar/document/change_my_name.txt /home/jenkins/workspace/monk/volumes/OscarDocument/oscar/document/teleplanremit_testfile.txt
-#Tail the logs
-docker-compose logs -f
+sudo -s
+cd /root/open-osp/volumes/OscarDocument/
+# Create
+touch foobar.txt
+# Move
+mv foobar.txt foobar.moved.txt
 ```
 
 Decrypt the payload. Note that `chauffeur` only works if we are running the VPN.

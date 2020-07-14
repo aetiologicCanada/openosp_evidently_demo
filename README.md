@@ -77,8 +77,9 @@ mv /home/jenkins/workspace/monk/volumes/OscarDocument/oscar/document/change_my_n
 #Tail the logs
 docker-compose logs -f
 ```
+Unless you have a valid sftp key, the process will fail at the sftp  statement. If you need to prove that the sftp works with a valid sftp key and userid, contact EVIDENTLY.
 
-Decrypt the payload. Note that `chauffeur` only works if we are running the VPN.
+If you have an account and sftp keys, and rsa keys, then decrypt the payload. Note that `chauffeur` only works if we are running the VPN.
 
 ```bash
 cd demo_testUser01

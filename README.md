@@ -1,5 +1,3 @@
-I have broken app.py.  The issue appears to be that the previous version assumed that the file teleplanremit was being created, when in fact it appears that it
-is being renamed/moved, and this is a distinct thing in the watchdog framework.  I attempted to modify the app to trigger the awk, encrypt, sftp function on move or create, but this has failed. My python skills have failed. 
 
 
 # Production
@@ -11,22 +9,29 @@ sudo docker image build -t evidentlyslocker/openosp_evidently_demo:latest .
 sudo docker push evidentlyslocker/openosp_evidently_demo:latest
 ```
 
+You can use this app without credentials, and it will fail at the stage where it tries to sftp.  That's fine as a test. If you want credentials, contact
+the developer. 
+
 ## Use of Deployed Image
 
 ```bash
-# I switch to /root/evidently and put the user folders there, but each to their own
+# I switch to /root/evidently and put the user folders tokens and identiiers there, but each to their own
 # mkdir /root/evidently
 # cd /root/evidently
 # on initialization, there is no ../OscarDocuments/oscar/billing folder
 # so, just in case, we create a billing folder if one does not already exist
 
+# here we create a folder and file for claims 
+# right now the files are only for one user. Relative paths are forthcoming
+
 mkdir -p /home/jenkins/workspace/monk/volumes/OscarDocument/oscar/billing/document
+# here we create a folder for remittance advice files
 mkdir -p /home/jenkins/workspace/monk/volumes/OscarDocument/oscar/document
 
 # throw a blank file in there just to keep awk happy.
 
-touch /home/jenkins/workspace/monk/volumes/OscarDocument/oscar/document/change_this_to_targetname.txt
-touch /home/jenkins/workspace/monk/volumes/OscarDocument/oscar/billing/download/Hempty_file
+sudo  /home/jenkins/workspace/monk/volumes/OscarDocument/oscar/document/change_this_to_targetname.txt
+sudo touch /home/jenkins/workspace/monk/volumes/OscarDocument/oscar/billing/download/Hempty_file
 
 # note that these steps are conducted outside of the docker container because the docker-container is mounted
 # read only and cannot make the folders and files
@@ -38,6 +43,16 @@ docker-compose stop
 docker-compose rm -f
 chmod 700 sftp_rsa
 docker-compose up -d
+
+sudo mv /home/jenkins/workspace/monk/volumes/OscarDocument/oscar/document/change_this_to_targetname.txt /home/jenkins/workspace/monk/volumes/OscarDocument/oscar/document/teleplanremittance_moved_here.txt
+
+docker-compose logs -f 
+# should show the watchdog is triggered, and the scrub, encrypt process is underway.
+# as noted above sftp will fail without user name, and ssh keys. 
+
+
+
+
 ```
 
 # Development

@@ -29,5 +29,7 @@ testFileExists() {
 # shellcheck disable=SC1091
 source ./../shunit2/shunit2
 
-# The *.tar file contains the `evidently_env` file.
+# The *.tar files contains the expected payload.
 testFileExists "$tarDestination/debug/evidently_env"
+testFileExists "$tarDestination/output/evidently_*.tar.gz.enc"
+testFileExists "$tarDestination/output/evidently_*_key.bin.enc"

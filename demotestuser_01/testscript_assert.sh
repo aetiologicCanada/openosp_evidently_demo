@@ -1,6 +1,6 @@
 #!/bin/bash
 
-dirTestOutput="./testOutput";
+dirTestOutput="./testscript_Output";
 
 # Re-create necessary local directories.
 rm -rf $dirTestOutput

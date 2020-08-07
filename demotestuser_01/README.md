@@ -10,6 +10,9 @@ cd demotestuser_01/
 
 # Run the test script.
 sudo ./testscript.sh
+
+# Once it finishes, run the assertion script
+sudo ./testscript_assert.sh
 ```
 
 # Description

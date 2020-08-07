@@ -22,3 +22,5 @@ services:
       - ./encrypt_rsa_public.pem:/app/encrypt.pub.pem
       # Add the RSA key for the end user SFTP access.
       - ./sftp_rsa:/app/sftp.pk
+      # Include the env_file
+      - ./sftp_rsa:/app/env_file

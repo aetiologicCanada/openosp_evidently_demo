@@ -26,7 +26,7 @@ TARGET_DIR = '/output'
 TARGET_DATA_DIR = os.path.join(TARGET_DIR, '/output/evidently_data/')
 ENCRYPT_KEY = '/app/encrypt.pub.pem'
 SFTP_KEY = '/app/sftp.pk'
-ENV_FILE = '/app/evidently_env'
+ENV_FILE = '/app/env_file'
 # TODO Why are we doubling up the '.pem' suffix here?
 ENCRYPT_KEY_PKCS8 = ENCRYPT_KEY + '.pem'
 TIME_STAMP = time.strftime("%Y%m%d-%H%M%S")

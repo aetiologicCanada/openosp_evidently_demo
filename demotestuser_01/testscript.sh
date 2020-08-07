@@ -15,8 +15,8 @@ sudo rm -f $fileTargetRemit
 sudo rm -f $fileTargetBilling
 
 # Rebuild the docker image in the **parent** directory.
-# sudo docker image build -t evidentlyslocker/openosp_evidently_demo:latest ..
-# sudo docker push evidentlyslocker/openosp_evidently_demo:latest
+sudo docker image build -t evidentlyslocker/openosp_evidently_demo:latest ..
+sudo docker push evidentlyslocker/openosp_evidently_demo:latest
 
 # Restart Docker and follow its logs.
 docker-compose stop

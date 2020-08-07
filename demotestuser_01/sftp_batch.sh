@@ -1,4 +1,4 @@
 #!/bin/bash
 
 cd writable || exit
-ls -tr
+ls -1tr

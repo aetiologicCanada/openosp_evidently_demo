@@ -1,6 +1,6 @@
 #!/bin/bash 
 
-files=$(sftp -i sftp_rsa -b ./sftp_batch.sh demotestuser_01@pickup.evidently.ca)
+files=$(sftp -i sftp_rsa -b ./sftp_batch.sh demotestuser_01@pickup.evidently.ca:writable)
 
 file=$(echo "$files" | tail -n 1 | tr -d '[:space:]')
 

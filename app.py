@@ -20,21 +20,23 @@ logging.basicConfig(
 with open('config.yml') as f:
     config = yaml.safe_load(f)
 
-SOURCE_DIR         = '/data'
-SOURCE_DIR_CLAIMS  = '/data1'
-TARGET_DIR         =  '/output'
-TARGET_DATA_DIR    = os.path.join(TARGET_DIR, '/output/evidently_data/')
-ENCRYPT_KEY        = '/app/encrypt.pub.pem'
-SFTP_KEY           = '/app/sftp.pk'
-ENCRYPT_KEY_PKCS8 = ENCRYPT_KEY + '.pem' # TODO Why are we doubling up the '.pem' suffix here?
-TIME_STAMP        = time.strftime("%Y%m%d-%H%M%S")
+SOURCE_DIR = '/data'
+SOURCE_DIR_CLAIMS = '/data1'
+TARGET_DIR = '/output'
+TARGET_DATA_DIR = os.path.join(TARGET_DIR, '/output/evidently_data/')
+ENCRYPT_KEY = '/app/encrypt.pub.pem'
+SFTP_KEY = '/app/sftp.pk'
+# TODO Why are we doubling up the '.pem' suffix here?
+ENCRYPT_KEY_PKCS8 = ENCRYPT_KEY + '.pem'
+TIME_STAMP = time.strftime("%Y%m%d-%H%M%S")
 logging.info(TIME_STAMP)
-SYMMETRIC_KEY     = '/output/key.bin'
+SYMMETRIC_KEY = '/output/key.bin'
 SYMMETRIC_KEY_ENC = '/output/evidently_{}_key.bin.enc'.format(TIME_STAMP)
 
 shutil.rmtree(TARGET_DATA_DIR, ignore_errors=True, onerror=None)
 os.makedirs(TARGET_DATA_DIR, exist_ok=True)
 os.makedirs(TARGET_DIR,      exist_ok=True)
+
 
 def is_trigger_file(file_path):
     return fnmatch(file_path, config['trigger_file_glob'])
@@ -44,8 +46,10 @@ def run_awk_scripts():
     for script in config['awk_scripts']:
         script_path = script['script']
         target_file_glob = script['target_file_glob']
-        assert os.path.exists(script_path), 'Missing file {}'.format(script_path)
-        cmd = 'mawk -f {} -v output_directory={} {}'.format(script_path, TARGET_DATA_DIR, target_file_glob)
+        assert os.path.exists(
+            script_path), 'Missing file {}'.format(script_path)
+        cmd = 'mawk -f {} -v output_directory={} {}'.format(
+            script_path, TARGET_DATA_DIR, target_file_glob)
         logging.info(cmd)
         subprocess.check_call(cmd, shell=True)
 
@@ -91,7 +95,8 @@ def encrypt_tar_ball(in_path):
         shell=True)
 
     file_stats = os.stat(out_path)
-    # logging.info(out_path)
+
+    logging.info(out_path)
     logging.info(file_stats)
 
     return out_path
@@ -112,7 +117,7 @@ def push_to_sftp(file_path):
     logging.info("SFTP completed")
 
 
-def create_sftp_envelope(files):
+def add_files_to_sftp_message(files):
     """Create a new tar achive that contains 
     1. the symmetrically encrypted SFTP payload and 
     2. the assymmetrically encrypted symmetric key that encrypted it.
@@ -138,7 +143,7 @@ def run_file_trigger(dest_path):
             tarball = tar_output_files()
             encrypt_setup()
             encrypted_file = encrypt_tar_ball(tarball)
-            sftp_envelope = create_sftp_envelope([
+            sftp_envelope = add_files_to_sftp_message([
                 encrypted_file,
                 SYMMETRIC_KEY_ENC
             ])
@@ -153,6 +158,7 @@ class Handler(FileSystemEventHandler):
     def on_moved(self, event):
         logging.info(event)
         run_file_trigger(event.dest_path)
+
     def on_created(self, event):
         logging.info(event)
         run_file_trigger(event.src_path)

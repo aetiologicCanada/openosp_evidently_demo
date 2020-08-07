@@ -26,6 +26,8 @@ docker-compose up --force-recreate --build -d
 fallocate -l $((5*1024*1024)) $fileSourceJunk
 date >> $fileSourceJunk
 
+cat $fileSourceJunk
+
 # Create the oscar documents directory.
 mkdir -p $dirOscarRemitFiles
 mkdir -p $dirOscarBillingFiles
@@ -35,5 +37,5 @@ mkdir -p $dirOscarBillingFiles
 rsync $fileSourceJunk $fileTargetBilling
 rsync $fileSourceJunk $fileTargetRemit
 
-# Inspect the docker logs.
-docker-compose logs -f
+# Follow the docker logs
+docker-compose logs -ft

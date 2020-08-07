@@ -11,10 +11,13 @@ pwd
 sudo rm -f $fileSourceRemit
 sudo rm -f $fileTargetRemit
 
+# Rebuild the docker image in the **parent** directory.
+sudo docker image build -t evidentlyslocker/openosp_evidently_demo:latest ..
+sudo docker push evidentlyslocker/openosp_evidently_demo:latest
+
 # Restart Docker and follow its logs.
 docker-compose stop
-docker-compose up -d
-docker-compose logs -t
+docker-compose up --force-recreate --build -d
 
 # Make a 5 MB junk file; write the date to it.
 fallocate -l $((5*1024*1024)) $fileSourceRemit
@@ -25,8 +28,7 @@ mkdir -p $dirOscarRemitFiles
 
 # Copy the remit file to the oscar document directory.
 # This triggers the watchdog.
-cp $fileSourceRemit $dirOscarRemitFiles
+rsync $fileSourceRemit $fileTargetRemit
 
-# Stop docker. The test is complete.
-docker-compose stop
-
+# Inspect the docker logs.
+docker-compose logs -f

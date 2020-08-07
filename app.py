@@ -130,6 +130,7 @@ def cleanup():
 
 
 def run_file_trigger(dest_path):
+    logging.info('run_file_trigger {}'.format(dest_path))
     if is_trigger_file(dest_path):
         try:
             logging.info("Workflow triggered")
@@ -162,6 +163,8 @@ if __name__ == '__main__':
     logging.basicConfig(level=logging.INFO,
                         format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
     logging.getLogger().setLevel(logging.INFO)
+
+    logging.info("Starting Evidently with config {}".format(config))
 
     observer = Observer()
     observer.schedule(Handler(), SOURCE_DIR)

@@ -9,8 +9,8 @@ sudo docker image build -t evidentlyslocker/openosp_evidently_demo:latest .
 sudo docker push evidentlyslocker/openosp_evidently_demo:latest
 ```
 
-You can use this app without credentials, and it will fail at the stage where it tries to sftp. That's fine as a test. If you want credentials, contact
-the developer.
+You can use this app without credentials, and it will fail at the stage where it
+tries to sftp. That's fine as a test. If you want credentials, contact the developer.
 
 ## Use of Deployed Image
 

@@ -4,14 +4,20 @@
 # Start docker
 sudo service docker start
 
-# Clone the repo and enter the directory
+# Clone the repo
 git clone git@github.com:aetiologicCanada/openosp_evidently_demo.git
+
+# Initialize submodules (pull in packages)
+git submodule init
+git submodule update
+
+# Enter the demo user directory
 cd demotestuser_01/
 
 # Run the test script.
 sudo ./testscript.sh
 
-# Once it finishes, run the assertion script
+# Once it finishes (in another terminal) run the assertion script.
 sudo ./testscript_assert.sh
 ```
 

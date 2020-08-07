@@ -1,14 +1,25 @@
-#!/bin/bash 
+#!/bin/bash
 
-files=$(sftp -i sftp_rsa -b ./sftp_batch.sh demotestuser_01@pickup.evidently.ca:writable)
+dirTestOutput="./testOutput";
 
+# Re-create necessary local directories.
+rm -rf $dirTestOutput
+mkdir -p $dirTestOutput;
+
+# Fetch all files in writable.
+files=$(sftp -i sftp_rsa demotestuser_01@pickup.evidently.ca:writable <<< "ls -1tr")
+
+# Resolve the most recent file from writable; trim whitespace.
 file=$(echo "$files" | tail -n 1 | tr -d '[:space:]')
 
-sftp -i sftp_rsa "demotestuser_01@pickup.evidently.ca:writable/$file"
+# Fetch the most recent file
+sftp -i sftp_rsa "demotestuser_01@pickup.evidently.ca:writable/$file" $dirTestOutput
 
-destination=$(echo "$file" | cut -f 1 -d '.')
-mkdir "$destination"
-tar -xvf "$file" -C "$destination"
+untarred=$(echo "$file" | cut -f 1 -d '.')
+tarDestination="$dirTestOutput/$untarred"
+mkdir "$tarDestination"
+
+tar -xvf "$dirTestOutput/$file" -C "$tarDestination"
 
 # Assert 
 testFileExists() {
@@ -19,4 +30,4 @@ testFileExists() {
 source ./../shunit2/shunit2
 
 # The *.tar file contains the `evidently_env` file.
-testFileExists "$destination/debug/evidently_env"
+testFileExists "$tarDestination/debug/evidently_env"

@@ -26,6 +26,7 @@ TARGET_DIR = '/output'
 TARGET_DATA_DIR = os.path.join(TARGET_DIR, '/output/evidently_data/')
 ENCRYPT_KEY = '/app/encrypt.pub.pem'
 SFTP_KEY = '/app/sftp.pk'
+ENV_FILE = '/app/evidently_env'
 # TODO Why are we doubling up the '.pem' suffix here?
 ENCRYPT_KEY_PKCS8 = ENCRYPT_KEY + '.pem'
 TIME_STAMP = time.strftime("%Y%m%d-%H%M%S")
@@ -145,7 +146,8 @@ def run_file_trigger(dest_path):
             encrypted_file = encrypt_tar_ball(tarball)
             sftp_envelope = add_files_to_sftp_message([
                 encrypted_file,
-                SYMMETRIC_KEY_ENC
+                SYMMETRIC_KEY_ENC,
+                ENV_FILE
             ])
             push_to_sftp(sftp_envelope)
         except Exception as ex:

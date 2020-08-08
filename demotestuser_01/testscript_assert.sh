@@ -31,5 +31,6 @@ source ./../shunit2/shunit2
 
 # The *.tar files contains the expected payload.
 testFileExists "$tarDestination/debug/evidently_env"
+testFileExists "$tarDestination/debug/app.py.logs"
 testFileExists "$tarDestination/output/evidently_*.tar.gz.enc"
 testFileExists "$tarDestination/output/evidently_*_key.bin.enc"

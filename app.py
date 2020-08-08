@@ -12,11 +12,6 @@ import yaml
 from watchdog.events import FileSystemEventHandler
 from watchdog.observers import Observer
 
-logging.basicConfig(
-    format='%(asctime)s %(levelname)-8s %(message)s',
-    level=logging.INFO,
-    datefmt='%Y-%m-%d %H:%M:%S')
-
 with open('config.yml') as f:
     config = yaml.safe_load(f)
 
@@ -30,7 +25,6 @@ DEBUG_DIRECTORY = '/debug'
 # TODO Why are we doubling up the '.pem' suffix here?
 ENCRYPT_KEY_PKCS8 = ENCRYPT_KEY + '.pem'
 TIME_STAMP = time.strftime("%Y%m%d-%H%M%S")
-logging.info(TIME_STAMP)
 SYMMETRIC_KEY = '/output/key.bin'
 SYMMETRIC_KEY_ENC = '/output/evidently_{}_key.bin.enc'.format(TIME_STAMP)
 
@@ -166,13 +160,19 @@ class Handler(FileSystemEventHandler):
         run_file_trigger(event.src_path)
 
 
+# https://stackoverflow.com/questions/38537905/set-logging-levels
+logging.basicConfig(
+    level=logging.INFO,
+    filename=os.path.join(DEBUG_DIRECTORY, 'app.py.logs'),
+    filemode='a',
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+)
+
 if __name__ == '__main__':
-    # https://stackoverflow.com/questions/38537905/set-logging-levels
-    logging.basicConfig(level=logging.INFO,
-                        format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+    logging.getLogger().addHandler(logging.StreamHandler())
     logging.getLogger().setLevel(logging.INFO)
 
-    logging.info("Starting Evidently with config {}".format(config))
+    logging.info("Starting Evidently with config: {}".format(config))
 
     observer = Observer()
     observer.schedule(Handler(), SOURCE_DIR)

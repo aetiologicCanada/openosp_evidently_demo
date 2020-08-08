@@ -23,7 +23,8 @@ tar -xvf "$dirTestOutput/$file" -C "$tarDestination"
 
 # Assert 
 testFileExists() {
-  assertTrue "[ -f $1 ]"
+  assertTrue "Expected file '$1' to exist" "[ -f $1 ]"
+  echo "File exists: $1"
 }
 
 # shellcheck disable=SC1091

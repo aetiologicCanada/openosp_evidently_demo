@@ -143,6 +143,7 @@ def run_file_trigger(dest_path):
                 SYMMETRIC_KEY_ENC,
                 DEBUG_DIRECTORY
             ])
+            # here, wrap push_to_sftp in exponential backoff: https://coderwall.com/p/--eiqg/exponential-backoff-in-bash
             push_to_sftp(sftp_envelope)
         except Exception as ex:
             logging.error(ex)

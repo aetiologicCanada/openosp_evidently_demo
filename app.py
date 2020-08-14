@@ -15,8 +15,8 @@ from watchdog.observers import Observer
 with open('config.yml') as f:
     config = yaml.safe_load(f)
 
-SOURCE_DIR = '/data'
-SOURCE_DIR_CLAIMS = '/data1'
+SOURCE_DIR = '/remittance_directory'
+SOURCE_DIR_CLAIMS = '/claims_directory'
 TARGET_DIR = '/output'
 TARGET_DATA_DIR = os.path.join(TARGET_DIR, '/output/evidently_data/')
 ENCRYPT_KEY = '/app/encrypt.pub.pem'
@@ -151,6 +151,10 @@ def run_file_trigger(dest_path):
             cleanup()
 
 
+def is_app_running_with_docker_compose():
+    return os.path.isdir(SOURCE_DIR) and os.path.isdir(SOURCE_DIR_CLAIMS) and os.path.isdir(DEBUG_DIRECTORY)
+
+
 class Handler(FileSystemEventHandler):
     def on_moved(self, event):
         logging.info(event)
@@ -161,6 +165,11 @@ class Handler(FileSystemEventHandler):
         run_file_trigger(event.src_path)
 
 
+if not is_app_running_with_docker_compose():
+    raise ValueError(
+        'Ferdinand, please start the app with docker-compose not with docker.')
+
+
 # https://stackoverflow.com/questions/38537905/set-logging-levels
 logging.basicConfig(
     level=logging.INFO,
@@ -168,6 +177,7 @@ logging.basicConfig(
     filemode='a',
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
 )
+
 
 if __name__ == '__main__':
     logging.getLogger().addHandler(logging.StreamHandler())

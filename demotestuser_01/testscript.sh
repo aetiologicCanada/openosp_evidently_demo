@@ -1,7 +1,9 @@
 #!/bin/bash
 
-dirOscarRemitFiles="/home/jenkins/workspace/demotestuser_01/volumes/OscarDocument/oscar/document"
-dirOscarBillingFiles="/home/jenkins/workspace/demotestuser_01/volumes/OscarDocument/oscar/billing/download"
+open_osp_user="demotestuser_01"
+
+dirOscarRemitFiles="/home/jenkins/workspace/$open_osp_user/volumes/OscarDocument/oscar/document"
+dirOscarBillingFiles="/home/jenkins/workspace/$open_osp_user/volumes/OscarDocument/oscar/billing/download"
 fileSourceJunk="/tmp/junkfile"
 fileTargetRemit="$dirOscarRemitFiles/teleplanremitjunk"
 fileTargetBilling="$dirOscarBillingFiles/H0001"

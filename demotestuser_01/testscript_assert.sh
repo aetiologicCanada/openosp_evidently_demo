@@ -24,20 +24,19 @@ mkdir "$tarDestination"
 tar -xvf "$dirTestOutput/$file" -C "$tarDestination"
 
 # Assert 
-testFileExists() {
+fileExists() {
   assertTrue "Expected file '$1' to exist" "[ -f $1 ]"
   echo "File exists: $1"
 }
 
-pwd
+# Clear the command line args before call shunit lest we receive a fatal error.
+shift $#
 
 # shellcheck disable=SC1091
-source "/home/bigfont/evidently/openosp_evidently_demo/shunit2/shunit2"
-
-exit
+source "./../shunit2/shunit2"
 
 # The *.tar files contains the expected payload.
-# testFileExists "$tarDestination/debug/evidently_env"
-# testFileExists "$tarDestination/debug/app.py.logs"
-# testFileExists "$tarDestination/output/evidently_*.tar.gz.enc"
-# testFileExists "$tarDestination/output/evidently_*_key.bin.enc"
+fileExists "$tarDestination/debug/evidently_env"
+fileExists "$tarDestination/debug/app.py.logs"
+fileExists "$tarDestination/output/evidently_*.tar.gz.enc"
+fileExists "$tarDestination/output/evidently_*_key.bin.enc"

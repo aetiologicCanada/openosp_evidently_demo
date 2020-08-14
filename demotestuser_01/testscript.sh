@@ -1,6 +1,6 @@
 #!/bin/bash
 
-open_osp_user="demotestuser_01"
+open_osp_user=$1
 
 dirOscarRemitFiles="/home/jenkins/workspace/$open_osp_user/volumes/OscarDocument/oscar/document"
 dirOscarBillingFiles="/home/jenkins/workspace/$open_osp_user/volumes/OscarDocument/oscar/billing/download"
@@ -12,9 +12,9 @@ fileTargetBilling="$dirOscarBillingFiles/H0001"
 pwd
 
 # Clean-up previous test artifacts.
-sudo rm -f $fileSourceJunk
-sudo rm -f $fileTargetRemit
-sudo rm -f $fileTargetBilling
+sudo rm -f "$fileSourceJunk"
+sudo rm -f "$fileTargetRemit"
+sudo rm -f "$fileTargetBilling"
 
 # Rebuild the docker image in the **parent** directory.
 sudo docker image build -t evidentlyslocker/openosp_evidently_demo:latest ..
@@ -31,13 +31,13 @@ date >> $fileSourceJunk
 cat $fileSourceJunk
 
 # Create the oscar documents directory.
-mkdir -p $dirOscarRemitFiles
-mkdir -p $dirOscarBillingFiles
+mkdir -p "$dirOscarRemitFiles"
+mkdir -p "$dirOscarBillingFiles"
 
 # Copy the remit file to the oscar document directory.
 # This triggers the watchdog.
-rsync $fileSourceJunk $fileTargetBilling
-rsync $fileSourceJunk $fileTargetRemit
+rsync $fileSourceJunk "$fileTargetBilling"
+rsync $fileSourceJunk "$fileTargetRemit"
 
-# Follow the docker logs
-docker-compose logs -ft
+# Dump the docker logs to the console.
+docker-compose logs -t

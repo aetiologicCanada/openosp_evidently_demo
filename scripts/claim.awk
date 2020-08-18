@@ -36,7 +36,7 @@ if(FNR ==1) outputfile = output_directory data_centre "_" basename(FILENAME)
 # it excludes all the oin data elements
 
 if(rec_code =="C02")
-    record = (substr($0,1,25)"----------____--"substr($0,42, 34 )"---------------"substr($0,92,40)"19991231"substr($0,140));
+    record = (substr($0,1,25)"----------____--"substr($0,42, 34 )"---------------"substr($0,92,39)"19991231"substr($0,140));
   else record=""
   
 print record > outputfile

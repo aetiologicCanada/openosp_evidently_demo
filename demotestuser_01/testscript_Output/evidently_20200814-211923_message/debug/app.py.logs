@@ -1,0 +1,16 @@
+2020-08-14 21:19:23,049 - root - INFO - Starting Evidently with config: {'trigger_file_glob': '/data/teleplanremit*', 'awk_scripts': [{'script': '/scripts/remittance.awk', 'target_file_glob': '/data/teleplanremit*'}, {'script': '/scripts/claim.awk', 'target_file_glob': '/data1/H*'}], 'sftp': {'host': 'pickup.evidently.ca', 'user': '${userid}', 'remote_dir': '/writable'}}
+2020-08-14 21:19:23,050 - root - INFO - Watching /data
+2020-08-14 21:19:23,122 - root - INFO - <FileCreatedEvent: src_path='/data/.teleplanremitjunk.SLMyOj'>
+2020-08-14 21:19:23,122 - root - INFO - run_file_trigger /data/.teleplanremitjunk.SLMyOj
+2020-08-14 21:19:23,140 - root - INFO - <FileMovedEvent: src_path='/data/.teleplanremitjunk.SLMyOj', dest_path='/data/teleplanremitjunk'>
+2020-08-14 21:19:23,140 - root - INFO - run_file_trigger /data/teleplanremitjunk
+2020-08-14 21:19:23,141 - root - INFO - Workflow triggered
+2020-08-14 21:19:23,141 - root - INFO - mawk -f /scripts/remittance.awk -v output_directory=/output/evidently_data/ /data/teleplanremit*
+2020-08-14 21:19:23,987 - root - INFO - mawk -f /scripts/claim.awk -v output_directory=/output/evidently_data/ /data1/H*
+2020-08-14 21:19:23,995 - root - INFO - Gzipping /output/evidently_data/ into /output/evidently_20200814-211923.tar.gz
+2020-08-14 21:19:25,318 - root - INFO - Gzip completed
+2020-08-14 21:19:25,319 - root - INFO - Generating symmetric key
+2020-08-14 21:19:25,323 - root - INFO - bin created
+2020-08-14 21:19:25,338 - root - INFO - /output/evidently_20200814-211923.tar.gz.enc
+2020-08-14 21:19:25,339 - root - INFO - os.stat_result(st_mode=33188, st_ino=3686452, st_dev=51, st_nlink=1, st_uid=0, st_gid=0, st_size=7966013, st_atime=1597439965, st_mtime=1597439965, st_ctime=1597439965)
+2020-08-14 21:19:25,339 - root - INFO - Creating sftp envelope for ['/output/evidently_20200814-211923.tar.gz.enc', '/output/evidently_20200814-211923_key.bin.enc', '/debug']

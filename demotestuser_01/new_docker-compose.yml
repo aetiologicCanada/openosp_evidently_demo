@@ -1,0 +1,27 @@
+---
+version: "3.2"
+
+services:
+  evidently:
+    # This docker-compose.yml file is the default for this directory and acquires
+    # the docker image from Docker Hub.
+    image: evidentlyslocker/openosp_evidently_demo:latest
+    env_file:
+      - evidently_env
+    volumes:
+      # Add the location of remittance files and other Oscar documents.
+      # We are using a `bind` here only because we found it non-trivial to use
+      # a `read_only` volume that uses an absolute path as its source.
+      - type: bind
+        source: /home/jenkins/workspace/demotestuser_01/volumes/OscarDocument/oscar/document
+        target: /remittance_directory
+        read_only: true
+      - type: bind
+        source: /home/jenkins/workspace/demotestuser_01/volumes/OscarDocument/oscar/billing/download
+        target: /claims_directory
+      # Add the public key that we use to encrypt the file.
+      - ./encrypt_rsa.pub.pem:/app/encrypt.pub.pem
+      # Add the RSA key for the end user SFTP access.
+      - ./sftp_rsa:/app/sftp.pk
+      # Include additional debug files
+      - ./evidently_env:/debug/evidently_env

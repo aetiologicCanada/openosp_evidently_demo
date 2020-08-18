@@ -56,8 +56,3 @@ print record > outputfile
 if(EOF) close(outputfile)
 }
 
-# Looks this is going to be a 5 line shell script
-# parse the remittance files using remittance_awk.awk
-# parse the claims files claims_awk.awk
-# generate a compressed tar ball if(EOF) {system("tar -cvzf "remittance_directory/output/data_centre"* remittance_directory/output/"datacentre".tar.gz")
-# encrypt tar.gz with public key

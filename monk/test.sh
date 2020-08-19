@@ -17,3 +17,6 @@ source ./testscript.sh "$open_osp_user"
 
 # shellcheck disable=SC1091
 source ./testscript_assert.sh "$open_osp_user"
+
+docker-compose logs -t
+

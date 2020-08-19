@@ -1,4 +1,4 @@
-#!/bin/bash -x
+#!/bin/bash 
 
 open_osp_user=$1
 

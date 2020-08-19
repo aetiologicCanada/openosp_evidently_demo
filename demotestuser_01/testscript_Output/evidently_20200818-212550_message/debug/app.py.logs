@@ -1,0 +1,16 @@
+2020-08-18 21:25:50,947 - root - INFO - Starting Evidently with config: {'trigger_file_glob': '/remittance_directory/teleplanremit*', 'awk_scripts': [{'script': '/scripts/remittance.awk', 'target_file_glob': '/remittance_directory/teleplanremit*'}, {'script': '/scripts/claim.awk', 'target_file_glob': '/claims_directory/H*'}], 'sftp': {'host': 'pickup.evidently.ca', 'user': '${userid}', 'remote_dir': '/writable'}}
+2020-08-18 21:25:50,948 - root - INFO - Watching /remittance_directory
+2020-08-18 21:25:51,026 - root - INFO - <FileCreatedEvent: src_path='/remittance_directory/.teleplanremitjunk.LKQCl1'>
+2020-08-18 21:25:51,026 - root - INFO - run_file_trigger /remittance_directory/.teleplanremitjunk.LKQCl1
+2020-08-18 21:25:51,040 - root - INFO - <FileMovedEvent: src_path='/remittance_directory/.teleplanremitjunk.LKQCl1', dest_path='/remittance_directory/teleplanremitjunk'>
+2020-08-18 21:25:51,041 - root - INFO - run_file_trigger /remittance_directory/teleplanremitjunk
+2020-08-18 21:25:51,041 - root - INFO - Workflow triggered
+2020-08-18 21:25:51,041 - root - INFO - mawk -f /scripts/remittance.awk -v output_directory=/output/evidently_data/ /remittance_directory/teleplanremit*
+2020-08-18 21:25:51,880 - root - INFO - mawk -f /scripts/claim.awk -v output_directory=/output/evidently_data/ /claims_directory/H*
+2020-08-18 21:25:51,887 - root - INFO - Gzipping /output/evidently_data/ into /output/evidently_20200818-212550.tar.gz
+2020-08-18 21:25:53,189 - root - INFO - Gzip completed
+2020-08-18 21:25:53,189 - root - INFO - Generating symmetric key
+2020-08-18 21:25:53,193 - root - INFO - bin created
+2020-08-18 21:25:53,208 - root - INFO - /output/evidently_20200818-212550.tar.gz.enc
+2020-08-18 21:25:53,208 - root - INFO - os.stat_result(st_mode=33188, st_ino=6820653, st_dev=65, st_nlink=1, st_uid=0, st_gid=0, st_size=7965649, st_atime=1597785953, st_mtime=1597785953, st_ctime=1597785953)
+2020-08-18 21:25:53,208 - root - INFO - Creating sftp envelope for ['/output/evidently_20200818-212550.tar.gz.enc', '/output/evidently_20200818-212550_key.bin.enc', '/debug']

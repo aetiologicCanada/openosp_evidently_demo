@@ -36,8 +36,8 @@ mkdir -p "$dirOscarBillingFiles"
 
 # Copy the remit file to the oscar document directory.
 # This triggers the watchdog.
-rsync $fileSourceJunk "$fileTargetBilling"
-rsync $fileSourceJunk "$fileTargetRemit"
+rsync -av --chmod=Du+rwx $fileSourceJunk "$fileTargetBilling"
+rsync -av --chmod=Du+rwx $fileSourceJunk "$fileTargetRemit"
 
 # Dump the docker logs to the console.
 docker-compose logs -t

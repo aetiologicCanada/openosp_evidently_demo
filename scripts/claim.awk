@@ -13,12 +13,12 @@ function basename(file) {
 
 {
 
-#some vars.  
+#some vars.
 rec_code = substr($0,1,3)
 first_letter = substr(rec_code,1,1)
 first_two = substr(rec_code,1,2)
 
-# This gets the data centre name for the output file. 
+# This gets the data centre name for the output file.
 
 if(index(FILENAME, "html")|| index(FILENAME, "HTML")) NEXTFILE
 
@@ -36,8 +36,9 @@ if(FNR ==1) outputfile = output_directory data_centre "_" basename(FILENAME)
 # it excludes all the oin data elements
 
 if(rec_code =="C02")
-    record = (substr($0,1,25)"----------____--"substr($0,42, 34 )"---------------"substr($0,92,39)"19991231"substr($0,140));
-  else record=""
-  
+record = (substr($0,1,25)"----------""____""--"substr($0,42, 35)"-----""-----""-----""_______________"\
+           substr($0,107,25)"99991231"substr($0,140,67));
+else record=""
+
 print record > outputfile
 }
